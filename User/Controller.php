@@ -6,8 +6,6 @@ Class Controller
 {
     
     protected $parameters = [];
-    
-    protected $commands = ['create', 'read', 'update', 'delete', 'list'];
 
     public function __construct($parameters = NULL) 
     {
@@ -28,13 +26,20 @@ Class Controller
         
         if (count($path_elements) != 0) {
             $command = array_shift($path_elements);
+            $query = [];
+            while (count($path_elements) > 0) {
+                $paramKey = array_shift($path_elements);
+                $value = array_shift($path_elements);
+                $query[$paramKey] = $value;
+            }
         }
         else {
             $command = isset($query['command']) ? $query['command'] : '';
         }
         
-        $returnRoutes = [
-            'command' => $command
+        $this->parameters = [
+            'command' => $command,
+            'query' => $query
             ];
         
         echo '<pre>';
@@ -45,36 +50,54 @@ Class Controller
             echo "command: "; var_dump($command);
         echo '</pre>';
         
-        return $returnRoutes;
+        return strlen($command) > 0 && !empty($query);
     }
 
     public function directRoute($url)
     {
         echo "in directRoute [" . $url . "]<br />";
         
-        $routeInfo = $this->analyseRoute($url);
+        $routeGood = $this->analyseRoute($url);
+        echo '<pre>';
+            echo "routeGood: "; var_dump($routeGood);
+        echo '</pre>';
+        
+        if ($routeGood) {
+
+            switch ($this->parameters['command']) {
+                case 'create':
+                    echo "*** create in model";
+                    break;
+                
+                case 'read':
+                    echo "***  read in model";
+                    break;
+                
+                case 'update':
+                    echo "*** update in model";
+                    break;
+                
+                case 'delete':
+                    echo "*** delete in model";
+                    break;
+                
+                default:
+                    echo "*** no command for string";
+            }
+        }
+        else {
+            echo "Some error case here";
+        }
         
                 
         echo '<pre>';
-            echo "RouteInfo: "; var_dump($routeInfo);
+            echo "RouteParameters: "; var_dump($this->getParams());
         echo '</pre>';
     }
     
     public function getParams()
     {
-        return $this->params;
-    }
-    
-    public function match($url)
-    {
-        foreach ($this->routes as $route => $params) {
-            if ($url == $route) {
-                $this->params = $params;
-                return true;
-            }
-        }
-
-        return false;
+        return $this->parameters;
     }
     
 }
