@@ -9,12 +9,12 @@
  * fn = first name
  * ln = last name
  * 
- * https://tools.ietf.org/html/rfc6570
+ * Reference: https://tools.ietf.org/html/rfc6570
  */
 
 require_once '../params/Configuration.php';
 
-use \PDO;
+//use \PDO;
 
 class Model
 {
@@ -36,6 +36,8 @@ class Model
             isset($params['p'])
             ) {
             
+            $passwordHash = password_hash($params['p'], PASSWORD_DEFAULT);
+            
             $sql = 'INSERT INTO users (email, first_name, last_name, passwd)
                     VALUES (:email, :first_name, :last_name, :passwd)';
 
@@ -45,7 +47,7 @@ class Model
             $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
             $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
             $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
-            $stmt->bindValue(':passwd', $params['p'], PDO::PARAM_STR);
+            $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
 
             try {
                 $results = $stmt->execute();
