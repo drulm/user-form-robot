@@ -1,8 +1,10 @@
 <?php
 
+require_once 'Model.php';
+
 //namespace User;
 
-Class Controller 
+Class Controller
 {
     
     protected $parameters = [];

@@ -6,7 +6,7 @@ ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
 // @TODO Clean up.
-require_once '../params/configuration.php';
+require_once '../params/Configuration.php';
 require_once '../User/Controller.php';
 
 // Create a new controller instance.
