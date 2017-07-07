@@ -26,6 +26,40 @@ class Model {
             $this->$k = $v;
         }
     }
+
+    public function read($id = NULL)
+    {
+        $sql = 'SELECT 
+                    id_users, email, first_name, last_name, passwd
+                FROM 
+                    users as u
+                ';
+        // Select only one entry
+        if ($id) {
+            $sql .= ' WHERE u.id_users = :id_users';
+        }
+
+        // Prepare sql and bind blog id if used.
+        $db = static::connectDB();
+        $stmt = $db->prepare($sql);
+
+        if ($id) {
+            $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        // Return all or one entry depending on if id was passed.
+        if ($stmt) {
+            if ($id) {
+                $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+                return is_array($fetch) ? $fetch : false;
+            }
+            return $stmt->fetchAll();
+        }
+
+        return false;
+    }
     
     protected static function connectDB()
     {

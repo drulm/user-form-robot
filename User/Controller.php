@@ -73,6 +73,7 @@ Class Controller
                 
                 case 'read':
                     echo "***  read in model";
+                    $this->readUser();
                     break;
                 
                 case 'update':
@@ -90,11 +91,35 @@ Class Controller
         else {
             echo "Some error case here";
         }
-        
-                
+
         echo '<pre>';
             echo "RouteParameters: "; var_dump($this->getParams());
         echo '</pre>';
+    }
+    
+    public function readUser() 
+    {
+        $user = new Model();
+
+        $results = $user->read($this->getID());
+
+        // If not found, show warning.
+        if (!$results) {
+            echo '<pre>';
+            echo "Could not read: "; var_dump($this->getParams());
+            echo '</pre>';
+        }
+        else {
+            echo '<pre>';
+            echo "read: "; var_dump($results);
+            echo '</pre>';
+        }
+    }
+    
+    public function getID()
+    {
+        $params = $this->getParams();
+        return isset($params['query']['id']) ? $params['query']['id'] : false;
     }
     
     public function getParams()
