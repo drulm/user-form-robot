@@ -1,10 +1,15 @@
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `idusers` int(11) NOT NULL AUTO_INCREMENT,
+  `id_users` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(254) NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  PRIMARY KEY (`idusers`),
-  UNIQUE KEY `idusers_UNIQUE` (`idusers`),
+  `passwd` varchar(45) NOT NULL,
+  PRIMARY KEY (`id_users`),
+  UNIQUE KEY `idusers_UNIQUE` (`id_users`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
