@@ -27,6 +27,37 @@ class Model
             $this->$k = $v;
         }
     }
+    
+    public function create($params)
+    {
+        if (isset($params['e']) &&
+            isset($params['fn']) &&
+            isset($params['ln']) &&
+            isset($params['p'])
+            ) {
+            
+            $sql = 'INSERT INTO users (email, first_name, last_name, passwd)
+                    VALUES (:email, :first_name, :last_name, :passwd)';
+
+            $db = static::connectDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
+            $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
+            $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
+            $stmt->bindValue(':passwd', $params['p'], PDO::PARAM_STR);
+
+            try {
+                $results = $stmt->execute();
+            } catch (PDOException $e) {
+                return $e->getMessage();
+            }
+
+            return $results;
+        }
+        
+        return false;
+    }
 
     public function read($id = NULL)
     {
@@ -42,11 +73,11 @@ class Model
 
         $db = static::connectDB();
         $stmt = $db->prepare($sql);
-
+        
         if ($id) {
-            $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
-        }
-
+                $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+            }
+        
         $stmt->execute();
 
         // Return all or one entry depending on if id was passed.
@@ -60,7 +91,7 @@ class Model
 
         return false;
     }
-    
+
     public function delete($id)
     {   
         if (filter_var($id, FILTER_VALIDATE_INT)) {
@@ -80,7 +111,7 @@ class Model
 
         return false;
     }
-    
+
     protected static function connectDB()
     {
         // Initial 

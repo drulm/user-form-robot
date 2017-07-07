@@ -75,6 +75,7 @@ Class Controller
             switch ($this->parameters['command']) {
                 case 'create':
                     echo "*** create in model";
+                    $this->createUser();
                     break;
                 
                 case 'read':
@@ -109,12 +110,37 @@ Class Controller
         echo '</pre>';
     }
     
+    public function createUser() 
+    {
+        $user = new Model();
+        
+        $params = $this->getQueryParams();
+        
+        if ($params) {
+
+            $results = $user->create($params);
+
+            if ($results === true) {
+                echo '<pre>';
+                echo "create: "; var_dump($results);
+                echo '</pre>';
+                return $results;
+            }
+        }
+        echo '<pre>';
+        echo "Could not create: "; var_dump($results);
+        echo '</pre>';
+        return false;
+    }
+    
     public function deleteUser() 
     {
         $user = new Model();
         
         $id = $this->getID();
         
+        $results = false;
+
         if ($id) {
 
             $results = $user->delete($id);
@@ -127,10 +153,9 @@ Class Controller
             }
         }
         echo '<pre>';
-        echo "Could not delete: "; var_dump($this->getParams());
+        echo "Could not delete: "; var_dump($results);
         echo '</pre>';
         return false;
-        
     }
     
     public function readUser() 
@@ -176,9 +201,9 @@ Class Controller
 
     public function getID()
     {
-        $params = $this->getParams();
-        if (isset($params['query']['id']) && is_numeric($params['query']['id'])) {
-            return $params['query']['id'];
+        $params = $this->getQueryParams();
+        if (isset($params['id']) && is_numeric($params['id'])) {
+            return $params['id'];
         }
         return false;
     }
@@ -186,6 +211,12 @@ Class Controller
     public function getParams()
     {
         return $this->parameters;
+    }
+    
+    
+    public function getQueryParams()
+    {
+        return $this->getParams()['query'];
     }
     
 }
