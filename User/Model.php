@@ -33,14 +33,13 @@ class Model
         $sql = 'SELECT 
                     id_users, email, first_name, last_name, passwd
                 FROM 
-                    users as u
+                    users AS u
                 ';
         // Select only one entry
         if ($id) {
             $sql .= ' WHERE u.id_users = :id_users';
         }
 
-        // Prepare sql and bind blog id if used.
         $db = static::connectDB();
         $stmt = $db->prepare($sql);
 
@@ -57,6 +56,26 @@ class Model
                 return is_array($fetch) ? $fetch : false;
             }
             return $stmt->fetchAll();
+        }
+
+        return false;
+    }
+    
+    public function delete($id)
+    {   
+        if (filter_var($id, FILTER_VALIDATE_INT)) {
+            $sql = 'DELETE FROM users 
+                    WHERE id_users = :id_users';
+
+            $db = static::connectDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+
+            $results = $stmt->execute();
+                
+            $deletedRows = $stmt->rowCount();
+            
+            return $deletedRows;
         }
 
         return false;

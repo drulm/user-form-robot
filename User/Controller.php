@@ -25,7 +25,7 @@ Class Controller
         if ($path && strpos($path, '/') == true) {
             $path_elements = array_filter( explode('/', $path), 'strlen');
         }
-        
+
         if (count($path_elements) != 0) {
             $command = array_shift($path_elements);
             $query = [];
@@ -37,6 +37,12 @@ Class Controller
         }
         else {
             $command = isset($query['command']) ? $query['command'] : '';
+        }
+        
+        // Spceial case when path is just 'index'
+        if ($path == 'index' || $path == 'index/') {
+            $command = 'index';
+            $query = ['index' => ''];
         }
         
         $this->parameters = [
@@ -87,6 +93,7 @@ Class Controller
                 
                 case 'delete':
                     echo "*** delete in model";
+                    $this->deleteUser();
                     break;
                 
                 default:
@@ -102,13 +109,36 @@ Class Controller
         echo '</pre>';
     }
     
+    public function deleteUser() 
+    {
+        $user = new Model();
+        
+        $id = $this->getID();
+        
+        if ($id) {
+
+            $results = $user->delete($id);
+
+            if ($results and $results > 0) {
+                echo '<pre>';
+                echo "delete: "; var_dump($results);
+                echo '</pre>';
+                return $results;
+            }
+        }
+        echo '<pre>';
+        echo "Could not delete: "; var_dump($this->getParams());
+        echo '</pre>';
+        return false;
+        
+    }
+    
     public function readUser() 
     {
         $user = new Model();
         
         $id = $this->getID();
         
-        $results = NULL;
         if ($id) {
 
             $results = $user->read($id);
@@ -117,11 +147,13 @@ Class Controller
                 echo '<pre>';
                 echo "read: "; var_dump($results);
                 echo '</pre>';
+                return $results;
             }
         }
         echo '<pre>';
         echo "Could not read: "; var_dump($this->getParams());
         echo '</pre>';
+        return false;
     }
 
     public function indexUser() 
@@ -134,12 +166,12 @@ Class Controller
             echo '<pre>';
             echo "index: "; var_dump($results);
             echo '</pre>';
+            return $results;
         }
-        else {
-            echo '<pre>';
-            echo "Could not index-read: "; var_dump($this->getParams());
-            echo '</pre>';
-        }
+        echo '<pre>';
+        echo "Could not index-read: "; var_dump($this->getParams());
+        echo '</pre>';
+        return false;
     }
 
     public function getID()
