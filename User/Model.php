@@ -16,7 +16,8 @@ require_once '../params/Configuration.php';
 
 use \PDO;
 
-class Model {
+class Model
+{
     
     public $errors = [];
     

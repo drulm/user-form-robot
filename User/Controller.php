@@ -76,6 +76,11 @@ Class Controller
                     $this->readUser();
                     break;
                 
+                case 'index':
+                    echo "***  index in model";
+                    $this->indexUser();
+                    break;
+                
                 case 'update':
                     echo "*** update in model";
                     break;
@@ -100,26 +105,50 @@ Class Controller
     public function readUser() 
     {
         $user = new Model();
+        
+        $id = $this->getID();
+        
+        $results = NULL;
+        if ($id) {
 
-        $results = $user->read($this->getID());
+            $results = $user->read($id);
 
-        // If not found, show warning.
-        if (!$results) {
+            if ($results) {
+                echo '<pre>';
+                echo "read: "; var_dump($results);
+                echo '</pre>';
+            }
+        }
+        echo '<pre>';
+        echo "Could not read: "; var_dump($this->getParams());
+        echo '</pre>';
+    }
+
+    public function indexUser() 
+    {
+        $user = new Model();
+
+        $results = $user->read();
+
+        if ($results) {
             echo '<pre>';
-            echo "Could not read: "; var_dump($this->getParams());
+            echo "index: "; var_dump($results);
             echo '</pre>';
         }
         else {
             echo '<pre>';
-            echo "read: "; var_dump($results);
+            echo "Could not index-read: "; var_dump($this->getParams());
             echo '</pre>';
         }
     }
-    
+
     public function getID()
     {
         $params = $this->getParams();
-        return isset($params['query']['id']) ? $params['query']['id'] : false;
+        if (isset($params['query']['id']) && is_numeric($params['query']['id'])) {
+            return $params['query']['id'];
+        }
+        return false;
     }
     
     public function getParams()
