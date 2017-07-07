@@ -168,7 +168,7 @@ Class Controller
 
             $results = $user->read($id);
 
-            if ($results) {
+            if ($results !== false) {
                 echo '<pre>';
                 echo "read: "; var_dump($results);
                 echo '</pre>';
@@ -176,7 +176,7 @@ Class Controller
             }
         }
         echo '<pre>';
-        echo "Could not read: "; var_dump($this->getParams());
+        echo "Could not read: "; var_dump($results);
         echo '</pre>';
         return false;
     }

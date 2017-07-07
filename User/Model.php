@@ -78,7 +78,11 @@ class Model
                 $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
             }
         
-        $stmt->execute();
+        try {
+            $results = $stmt->execute();
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
 
         // Return all or one entry depending on if id was passed.
         if ($stmt) {
@@ -102,10 +106,14 @@ class Model
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
 
-            $results = $stmt->execute();
-                
+            try {
+                $results = $stmt->execute();
+            } catch (PDOException $e) {
+                return $e->getMessage();
+            }
+
             $deletedRows = $stmt->rowCount();
-            
+
             return $deletedRows;
         }
 
@@ -125,10 +133,12 @@ class Model
                 ';port=' . Configuration::DB_MYSQL_PORT . 
                 ';charset=utf8';
 
-            $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
-
-            // Error should throw exception.
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            try {
+                $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
+                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                return $e->getMessage();
+            }
         }
 
         return $db;
