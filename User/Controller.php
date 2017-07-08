@@ -17,9 +17,8 @@ Class Controller
     public function analyseRoute($url) 
     {
         parse_str($url, $query);
-
-        reset($query);
-        $path = key($query);
+        
+        $path = strtok($url, '?');
         
         $path_elements = [];
         if ($path && strpos($path, '/') == true) {
