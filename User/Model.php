@@ -60,6 +60,71 @@ class Model
         
         return false;
     }
+    
+    public function update($params)
+    {
+        echo '<pre>';
+        echo "update PARAMS: "; var_dump($params);
+        echo '</pre>';
+        
+        if (
+            isset($params['id']) &&
+                (
+                    isset($params['e']) ||
+                    isset($params['fn']) ||
+                    isset($params['ln']) ||
+                    isset($params['p'])
+                )
+            ) {
+            
+            $q = [];
+            if (isset($params['e'])) {
+                $q[] = "email = :email";
+            }
+            if (isset($params['fn'])) {
+                $q[] = "first_name = :first_name";
+            }
+            if (isset($params['ln'])) {
+                $q[] = "last_name = :last_name";
+            }
+            if (isset($params['p'])) {
+                $q[] = "passwd = :passwd";
+            }
+            $sql = 'UPDATE users SET ' . implode(", ", $q) . ' WHERE id_users = :id_users';
+            
+            echo '<pre>';
+            echo "Update SQL: "; var_dump($sql);
+            echo '</pre>';
+
+            $db = static::connectDB();
+            $stmt = $db->prepare($sql);
+
+            if (isset($params['e'])) {
+                $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
+            }
+            if (isset($params['fn'])) {
+                $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
+            }
+            if (isset($params['ln'])) {
+                $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
+            }
+            if (isset($params['p'])) {
+                $passwordHash = password_hash($params['p'], PASSWORD_DEFAULT);
+                $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
+            }
+            $stmt->bindValue(':id_users', $params['id'], PDO::PARAM_INT);
+
+            try {
+                $results = $stmt->execute();
+            } catch (PDOException $e) {
+                return $e->getMessage();
+            }
+
+            return $results;
+        }
+        
+        return false;
+    }
 
     public function read($id = NULL)
     {

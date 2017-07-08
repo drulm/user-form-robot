@@ -90,6 +90,7 @@ Class Controller
                 
                 case 'update':
                     echo "*** update in model";
+                    $this->updateUser();
                     break;
                 
                 case 'delete':
@@ -105,9 +106,29 @@ Class Controller
             echo "Some error case here";
         }
 
+    }
+    
+    public function updateUser() 
+    {
+        $user = new Model();
+        
+        $params = $this->getQueryParams();
+        
+        if ($params) {
+
+            $results = $user->update($params);
+
+            if ($results === true) {
+                echo '<pre>';
+                echo "update: "; var_dump($results);
+                echo '</pre>';
+                return $results;
+            }
+        }
         echo '<pre>';
-            echo "RouteParameters: "; var_dump($this->getParams());
+        echo "Could not update: "; var_dump($results);
         echo '</pre>';
+        return false;
     }
     
     public function createUser() 
