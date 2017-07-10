@@ -48,7 +48,7 @@ class Configuration
      * Set to true for developer messages.
      * @var boolean
      */
-    const DEBUG = true;
+    const DEBUG = false;
     
     /**
      * Error prefix string for Model/Database errors.

@@ -25,22 +25,75 @@ class View
      */
     public function render($data, $type, $errors)
     {
-        if ($type == 'index') {
-            $html = $this->renderIndex($data);
-        }
-        else if ($type == 'json') {
-            $html = $this->renderJson($data);
-        }
-        else if ($type == 'read') {
-            $html = $this->renderRead($data);
-        }
-        else if ($type == 'otherAction') {
-            $html = $this->renderOtherAction($data);
+        switch ($type) {
+            case 'index':
+                $html = $this->renderIndex($data);
+                break;
+
+            case 'json':
+                $html = $this->renderJson($data);
+                break;
+
+            case 'read':
+                $html = $this->renderRead($data);
+                break;
+
+            case 'otherAction':
+                $html = $this->renderOtherAction($data);
+                break;
+            
+            case 'routeError':
+                $html = $this->renderRouteError($data);
+                break;
+            
+            case 'defaultPage':
+                $html = $this->renderDefaultPage($data);
+                break;
+
+            default:
         }
         
         $errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
         
         $this->renderTemplate($html, $errorMarkup);
+    }
+    
+    /**
+     * Render HTML for a simple default page.
+     * 
+     * @param type $data            Parameter data, if needed.
+     * @return string               The HTML to display.
+     */
+    public function renderDefaultPage($data) 
+    {
+$markup = <<<HTML
+    <h1>User MVC site</h1>
+    <h2>Default Page</h2>
+HTML;
+        
+        return $markup;
+    }
+
+    /**
+     * Generate html for when a route error occurs.
+     * 
+     * @param array $data           Array of one user from a read.
+     * @return string               The HTML to display.
+     */
+    public function renderRouteError($data) 
+    {
+        
+        ob_start();
+        var_dump($data['query']);
+        $query = ob_get_clean();
+
+$markup = <<<HTML
+    <h1>Route Error:</h1>
+    <h2>Command: {$data['command']}</h2>
+    <h2>Query: {$query}</h2>
+HTML;
+        
+        return $markup;
     }
     
     /**
@@ -154,12 +207,10 @@ HTML;
      */
     public function renderErrors($errors) 
     {
-        
         $markup = '';   
         foreach ($errors as $errString) {
-            $markup .= '<h4>' . $errString . '</h4>';
+            $markup .= '<pre><h4>' . $errString . '</h4></pre>';
         }
-
         return $markup;
     }
     
