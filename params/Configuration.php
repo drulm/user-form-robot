@@ -39,10 +39,16 @@ class Configuration
     const DB_PASSWORD = 'grace';
     
     /**
+     * Set to true to output error messages at bottom of page.
+     * @var boolean
+     */
+    const VIEW_ERRORS = true;
+    
+    /**
      * Set to true for developer messages.
      * @var boolean
      */
-    const DEBUG = false;
+    const DEBUG = true;
     
     /**
      * Error prefix string for Model/Database errors.

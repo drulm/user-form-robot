@@ -23,7 +23,7 @@ class View
      * @param array $data               Data used for the render.
      * @param string $type              Type of render to generate.    
      */
-    public function render($data, $type)
+    public function render($data, $type, $errors)
     {
         if ($type == 'index') {
             $html = $this->renderIndex($data);
@@ -38,7 +38,9 @@ class View
             $html = $this->renderOtherAction($data);
         }
         
-        $this->renderTemplate($html);
+        $errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
+        
+        $this->renderTemplate($html, $errorMarkup);
     }
     
     /**
@@ -68,12 +70,6 @@ HTML;
      */
     public function renderIndex($data) {
         ob_start();
-        /*echo '<pre>';
-        echo "INDEX: "; var_dump($data);
-        echo '</pre>';
-         * 
-         */
-        
         echo '<table><thead><tr><th>';
         echo implode('</th><th>', array_keys(current($data)));
         echo '</tr></thead><tbody>';
@@ -83,7 +79,6 @@ HTML;
             echo '<tr><td>' . implode('</td><td>', $row) . '</td></tr>'; 
         }
         echo '</tbody></table>';
-        
         $html = ob_get_clean();
         return $html;
     }
@@ -126,7 +121,7 @@ HTML;
      * 
      * @param type $html            The HTML to echo to the screen.
      */
-    public function renderTemplate($html) {
+    public function renderTemplate($html, $errors) {
 
 $markup = <<<HTML
 <!DOCTYPE html>
@@ -138,11 +133,28 @@ $markup = <<<HTML
     </head>
     <body>
         {$html}
+        {$errors}
     </body>
 </html>
 HTML;
     
     echo $markup;
+    }
+    
+    /**
+     * Generates HTML for errors if shown.
+     * 
+     * @param array $data           Array of error strings.
+     * @return string               Returns HTML.
+     */
+    public function renderErrors($errors) {
+        
+        $markup = '';   
+        foreach ($errors as $errString) {
+            $markup .= '<h4>' . $errString . '</h4>';
+        }
+
+        return $markup;
     }
     
 }

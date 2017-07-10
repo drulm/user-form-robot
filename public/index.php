@@ -26,8 +26,9 @@ $url = $_SERVER['QUERY_STRING'];
 // Direct the route given the url information.
 $results = $controller->directRoute($url);
 
-//$controller->indexUser();
-
-echo '<pre>';
+/*echo '<pre>';
 echo "Errors: "; var_dump($controller->getErrors());
 echo '</pre>';
+ * 
+ */
+
