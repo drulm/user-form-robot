@@ -13,7 +13,7 @@ class Configuration
 
     const DB_PASSWORD = 'grace';
     
-    const DEBUG = true;
+    const DEBUG = false;
     
     const DB_ERROR_MSG = "MODEL ERROR: ";
     
