@@ -164,9 +164,7 @@ Class Controller
      * @return boolean          Returns true if updated correctly.
      */
     public function updateUser() 
-    {
-        //$user = new Model();
-        
+    {   
         $params = $this->getQueryParams();
         
         if ($params) {
@@ -204,8 +202,6 @@ Class Controller
      */
     public function deleteUser() 
     {
-        //$user = new Model();
-        
         $id = $this->getID();
         
         $results = false;
