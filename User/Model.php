@@ -147,8 +147,10 @@ class Model
                 $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
+            
+            $updatedRows = $stmt->rowCount();
 
-            return $results;
+            return $updatedRows;
         }
         
         $this->addError(Configuration::DB_ERROR_MSG . "Could not update existing user record. Check parameters.");
