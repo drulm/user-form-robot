@@ -253,7 +253,14 @@ Class Controller
         if (!$results) {
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, Id not valid or missing.");
         }
-        $this->view->render($results, 'read', $this->getErrors());
+
+        $query = $this->getQueryParams();
+        if ($query['type'] == 'json') {
+            $this->view->render($results, 'json', $this->getErrors());
+        }
+        else {
+            $this->view->render($results, 'read', $this->getErrors());
+        }
         return $results;
     }
 
@@ -268,7 +275,14 @@ Class Controller
         if (!$results) {
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not index (read all) users from database.");
         }
-        $this->view->render($results, 'index', $this->getErrors());
+        
+        $query = $this->getQueryParams();
+        if ($query['type'] == 'json') {
+            $this->view->render($results, 'json', $this->getErrors());
+        }
+        else {
+            $this->view->render($results, 'index', $this->getErrors());
+        }
         return $results;
     }
 
