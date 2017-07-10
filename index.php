@@ -6,8 +6,8 @@
  */
 
 // @TODO Clean up.
-require_once '../params/Configuration.php';
-require_once '../User/Controller.php';
+require_once 'params/Configuration.php';
+require_once 'User/Controller.php';
 
 if (Configuration::DEBUG) {
     error_reporting(E_ALL);
@@ -21,7 +21,8 @@ $controller = new Controller();
 // Get the query string.
 // @TODO Do not Access Superglobal $_SERVER Array Directly.
 // @TODO Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
-$url = $_SERVER['QUERY_STRING'];
+//$url = $_SERVER['QUERY_STRING'];
+$url = $_SERVER["REQUEST_URI"];
 
 // Direct the route given the url information.
 $results = $controller->directRoute($url);

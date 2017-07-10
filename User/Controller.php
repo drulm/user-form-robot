@@ -57,15 +57,27 @@ Class Controller
      */
     public function analyseRoute($url) 
     {
-        parse_str($url, $query);
-        $path = strtok($url, '?');
-        $path_elements = [];
+        // Parse url into path and query parameters.
+        $parsed_url = parse_url($url);
+        
+        // If the query is preset, parse it.
+        $query = isset($parsed_url['query']) ? $parsed_url['query'] : '';
+        parse_str($query, $query);
 
-        if ($path && strpos($path, '/') == true) {
+        // Save the path, and remove everything up to the ? if needed.
+        $path = $parsed_url['path'];
+        $path = strtok($path, '?');
+
+        // Path elements holds each of the path-strings separated by '/'
+        // Explode the path into each word in the path.
+        $path_elements = [];
+        if ($path && is_int(strpos($path, '/'))) {
             $path_elements = array_filter( explode('/', $path), 'strlen');
         }
 
-        if (count($path_elements) != 0) {
+        // If we have path elements that are not just index.php, then 
+        // convert path elements to equivalent of query parameters.
+        if (count($path_elements) != 0 && $path_elements[1] != 'index.php') {
             $command = array_shift($path_elements);
             $query = [];
             while (count($path_elements) > 0) {
@@ -74,16 +86,18 @@ Class Controller
                 $query[$paramKey] = $value;
             }
         }
+        // Otherwise set the query command if it is set.
         else {
             $command = isset($query['command']) ? $query['command'] : '';
         }
         
-        // Spceial case when path is just 'index'
+        // Special case when path is just 'index' for the default page.
         if ($path == 'index' || $path == 'index/') {
             $command = 'index';
             $query = ['index' => ''];
         }
         
+        // Controller parameters are the command and the query elements.
         $this->parameters = ['command' => $command, 'query' => $query];
         
         if (Configuration::DEBUG) {
@@ -92,8 +106,9 @@ Class Controller
             echo "query: "; var_dump($query);
             echo "command: "; var_dump($command); echo '</pre>';
         }
-        $validRoute = (strlen($command) > 0 && !empty($query)) | ($command == '' && empty($query));
 
+        // Return the validity of the route.
+        $validRoute = strlen($command) > 0 || ($command == '' && empty($query));
         if (!$validRoute) {
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route. Check path and parameters.");
         }
@@ -255,7 +270,7 @@ Class Controller
         }
 
         $query = $this->getQueryParams();
-        if ($query['type'] == 'json') {
+        if (isset($query['type']) && $query['type'] == 'json') {
             $this->view->render($results, 'json', $this->getErrors());
         }
         else {
@@ -277,7 +292,7 @@ Class Controller
         }
         
         $query = $this->getQueryParams();
-        if ($query['type'] == 'json') {
+        if (isset($query['type']) && $query['type'] == 'json') {
             $this->view->render($results, 'json', $this->getErrors());
         }
         else {

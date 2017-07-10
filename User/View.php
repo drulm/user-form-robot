@@ -30,10 +30,6 @@ class View
                 $html = $this->renderIndex($data);
                 break;
 
-            case 'json':
-                $html = $this->renderJson($data);
-                break;
-
             case 'read':
                 $html = $this->renderRead($data);
                 break;
@@ -49,10 +45,16 @@ class View
             case 'defaultPage':
                 $html = $this->renderDefaultPage($data);
                 break;
-
+            
+            case 'json':
+                $this->renderJson($data);
+                return;
+            
             default:
                 $html = $this->renderRouteError($data);
                 break;
+            
+
         }
         
         $errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
@@ -86,8 +88,8 @@ $markup = <<<HTML
         <li>NON VALID ROUTE EXAMPLE: /AnythingElse</li>
         <li>NON VALID ROUTE EXAMPLE: /index.php?command=AnythingElse</li>
         <li>DEFAULT PAGE / HOST: example: localhost</li>
+        <li>DEFAULT PAGE / HOST: example: localhost/index.php</li>
         </ul>
-    
 HTML;
         
         return $markup;
@@ -189,7 +191,7 @@ HTML;
      */
     public function renderJson($data) 
     {
-        return json_encode($data, JSON_PRETTY_PRINT);
+        echo json_encode($data, JSON_PRETTY_PRINT);
     }
     
     /**

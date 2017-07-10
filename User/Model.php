@@ -1,9 +1,9 @@
 <?php
 
-require_once '../params/Configuration.php';
+//require_once '../params/Configuration.php';
+require_once 'params/Configuration.php';
 
 //use \PDO;
-
 
 /**
  *

@@ -12,7 +12,7 @@ class Configuration
      * Hostname or IP
      * @var string
      */
-    const DB_HOST = '127.0.0.1';
+    const DB_HOST = '192.168.59.76';
 
     /**
      * SQL(MySQL) port
@@ -30,13 +30,13 @@ class Configuration
      * DB Username
      * @var string
      */
-    const DB_USER = 'grace';
+    const DB_USER = 'my_app';
 
     /**
      * DB Password
      * @var string
      */
-    const DB_PASSWORD = 'grace';
+    const DB_PASSWORD = 'secret';
     
     /**
      * Set to true to output error messages at bottom of page.
