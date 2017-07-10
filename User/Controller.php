@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Model.php';
+require_once 'View.php';
 
 //namespace User;
 
@@ -27,6 +28,13 @@ Class Controller
      * @var Model                   User Model class instance.
      */
     protected $user;
+    
+    /**
+     * The View for User.
+     * 
+     * @var View                    User View class instance.
+     */
+    protected $view;
 
     /**
      * Class constructor
@@ -36,6 +44,7 @@ Class Controller
     public function __construct($parameters = NULL) 
     {
         $this->user = new Model();
+        $this->view = new View();
         $this->parameters = $parameters;
     }
 
@@ -222,6 +231,9 @@ Class Controller
             if (!$results) {
                 $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, check id.");
             }
+            
+            $this->view->render($results);
+            
             return $results;
         }
         
@@ -241,6 +253,8 @@ Class Controller
         if (!$results) {
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not index (read all) users from database.");
         }
+        
+        $this->view->render($results);
         
         return $results;
     }

@@ -27,9 +27,5 @@ $url = $_SERVER['QUERY_STRING'];
 $results = $controller->directRoute($url);
 
 echo '<pre>';
-echo "Results: success and data: "; var_dump($results);
-echo '</pre>';
-
-echo '<pre>';
 echo "Errors: "; var_dump($controller->getErrors());
 echo '</pre>';

@@ -1,8 +1,19 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
+ * User view
+ *
+ * PHP version 7.0
  */
-
+class View
+{
+    
+    public static function render($data)
+    {
+        echo '<pre>';
+        echo "*** Data: "; var_dump($data);
+        echo '</pre>';
+    }
+    
+}
