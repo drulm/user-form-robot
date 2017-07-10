@@ -1,13 +1,19 @@
 <?php
-
-// @TODO Error reporting, remove when done.
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+/**
+ * A User pre controller
+ *
+ * PHP version 7.0
+ */
 
 // @TODO Clean up.
 require_once '../params/Configuration.php';
 require_once '../User/Controller.php';
+
+if (Configuration::DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', TRUE);
+    ini_set('display_startup_errors', TRUE);
+}
 
 // Create a new controller instance.
 $controller = new Controller();
@@ -21,7 +27,7 @@ $url = $_SERVER['QUERY_STRING'];
 $results = $controller->directRoute($url);
 
 echo '<pre>';
-echo "Results: "; var_dump($results);
+echo "Results: success and data: "; var_dump($results);
 echo '</pre>';
 
 echo '<pre>';
