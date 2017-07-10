@@ -142,13 +142,20 @@ Class Controller
                 
                 default:
                     $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid command.");
+                    $results = $this->routeError();
             }
         }
         else {
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route.");
+            $results = $this->routeError();
         }
 
         return $results;
+    }
+    
+    public function routeError()
+    {
+        
     }
     
     /**
@@ -301,7 +308,8 @@ Class Controller
      * 
      * @return array            Array of strings of error messages.
      */
-    public function getErrors() {
+    public function getErrors() 
+    {
         return $this->user->getErrors();
     }
     

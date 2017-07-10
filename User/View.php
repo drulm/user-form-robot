@@ -49,7 +49,8 @@ class View
      * @param array $data           Array of one user from a read.
      * @return string               The HTML to display.
      */
-    public function renderRead($data) {
+    public function renderRead($data) 
+    {
 
 $markup = <<<HTML
     <h1>User Id: {$data['id_users']}</h1>
@@ -68,7 +69,8 @@ HTML;
      * @param array $data           Array of all users.
      * @return string               HTML generated.
      */
-    public function renderIndex($data) {
+    public function renderIndex($data) 
+    {
         ob_start();
         echo '<table><thead><tr><th>';
         echo implode('</th><th>', array_keys(current($data)));
@@ -91,7 +93,8 @@ HTML;
      *      $data[1..n] = additional data
      * @return string               HTML generated.
      */
-    public function renderOtherAction($data) {
+    public function renderOtherAction($data) 
+    {
         
         $value = reset($data);
         $action = key($data);
@@ -112,7 +115,8 @@ HTML;
      * @param array $data           The data to render.
      * @return string               The generated HTML.
      */
-    public function renderJson($data) {
+    public function renderJson($data) 
+    {
         return json_encode($data, JSON_PRETTY_PRINT);
     }
     
@@ -121,7 +125,8 @@ HTML;
      * 
      * @param type $html            The HTML to echo to the screen.
      */
-    public function renderTemplate($html, $errors) {
+    public function renderTemplate($html, $errors) 
+    {
 
 $markup = <<<HTML
 <!DOCTYPE html>
@@ -147,7 +152,8 @@ HTML;
      * @param array $data           Array of error strings.
      * @return string               Returns HTML.
      */
-    public function renderErrors($errors) {
+    public function renderErrors($errors) 
+    {
         
         $markup = '';   
         foreach ($errors as $errString) {

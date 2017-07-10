@@ -276,7 +276,8 @@ class Model
      * 
      * @return array            Array of strings of error messages.
      */
-    public function getErrors() {
+    public function getErrors() 
+    {
         return $this->errorArray;
     }
     
@@ -285,7 +286,8 @@ class Model
      * 
      * @param string $s         String containing error message. 
      */
-    public function addError($s) {
+    public function addError($s) 
+    {
         $this->errorArray[] = $s;
     }
     
