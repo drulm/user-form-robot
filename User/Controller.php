@@ -164,7 +164,7 @@ Class Controller
         
         if ($params) {
             $results = $this->user->update($params);
-            $this->view->render(['update', $results], 'otherAction');
+            $this->view->render(['update' => $results], 'otherAction');
             return $results;
         }
         $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not update, check parameters.");
@@ -182,7 +182,7 @@ Class Controller
         
         if ($params) {
             $results = $this->user->create($params);
-            $this->view->render(['create', $results], 'otherAction');
+            $this->view->render(['create' => $results], 'otherAction');
             return $results;
             }
 
@@ -207,7 +207,7 @@ Class Controller
 
             $results = $this->user->delete($id);
 
-            $this->view->render(['delete', $results], 'otherAction');
+            $this->view->render(['delete' => $results], 'otherAction');
             
             if ($results == 0) {
                 $this->user->addError(Configuration::CONT_ERROR_MSG . "User could not be deleted.");
@@ -234,7 +234,7 @@ Class Controller
             if (!$results) {
                 $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, check id.");
             }
-            
+                 
             $this->view->render($results, 'read');
             
             return $results;

@@ -68,9 +68,22 @@ HTML;
      */
     public function renderIndex($data) {
         ob_start();
-        echo '<pre>';
+        /*echo '<pre>';
         echo "INDEX: "; var_dump($data);
         echo '</pre>';
+         * 
+         */
+        
+        echo '<table><thead><tr><th>';
+        echo implode('</th><th>', array_keys(current($data)));
+        echo '</tr></thead><tbody>';
+        
+        foreach ($data as $row) {
+            array_map('htmlentities', $row);
+            echo '<tr><td>' . implode('</td><td>', $row) . '</td></tr>'; 
+        }
+        echo '</tbody></table>';
+        
         $html = ob_get_clean();
         return $html;
     }
@@ -79,16 +92,19 @@ HTML;
      * Render simple page based on status of an action (command).
      * 
      * @param array $data           The data for this render
-     *      $data[0] = action (string)
-     *      $data[1] = success (boolean)
+     *      $data[0] = action (string) => success (boolean)
+     *      $data[1..n] = additional data
      * @return string               HTML generated.
      */
     public function renderOtherAction($data) {
         
-        $outcome = $data[1] ? "true" : "false";
+        $value = reset($data);
+        $action = key($data);
+        
+        $outcome = $value ? "true" : "false";
         
 $markup = <<<HTML
-    <h1>Action: {$data[0]}</h1>
+    <h1>Action: {$action}</h1>
     <h2>Outcome: {$outcome}</h2>
 HTML;
         

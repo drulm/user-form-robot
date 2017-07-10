@@ -199,7 +199,7 @@ class Model
                 }        
                 return is_array($fetch) ? $fetch : false;
             }
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         $this->addError(Configuration::DB_ERROR_MSG . "Could not read user record. Check id used.");
