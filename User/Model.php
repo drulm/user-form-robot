@@ -77,14 +77,14 @@ class Model
             try {
                 $results = $stmt->execute();   
             } catch (PDOException $e) {
-                $this->errorArray[] = $e->getMessage();
+                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
 
             return $results;
         }
-        
-        $this->errorArray[] = "Could not create new user record. Check parameters.";
+
+        $this->addError(Configuration::DB_ERROR_MSG . "Could not create new user record. Check parameters.");
         return false;
     }
     
@@ -144,14 +144,14 @@ class Model
             try {
                 $results = $stmt->execute();
             } catch (PDOException $e) {
-                $this->errorArray[] = $e->getMessage();
+                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
 
             return $results;
         }
         
-        $this->errorArray[] = "Could not update existing user record. Check parameters.";
+        $this->addError(Configuration::DB_ERROR_MSG . "Could not update existing user record. Check parameters.");
         return false;
     }
 
@@ -183,7 +183,7 @@ class Model
         try {
             $results = $stmt->execute();
         } catch (PDOException $e) {
-            $this->errorArray[] = $e->getMessage();
+            $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
             return false;
         }
 
@@ -193,14 +193,14 @@ class Model
                 $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$fetch) {
                     is_array($fetch);
-                    $this->errorArray[] = "Could not read user row.";
-                }
+                    $this->addError(Configuration::DB_ERROR_MSG . "Could not read user row.");
+                }        
                 return is_array($fetch) ? $fetch : false;
             }
             return $stmt->fetchAll();
         }
 
-        $this->errorArray[] = "Could not read user record. Check id used.";
+        $this->addError(Configuration::DB_ERROR_MSG . "Could not read user record. Check id used.");
         return false;
     }
 
@@ -224,7 +224,7 @@ class Model
             try {
                 $results = $stmt->execute();
             } catch (PDOException $e) {
-                $this->errorArray[] = $e->getMessage();
+                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
 
@@ -233,7 +233,7 @@ class Model
             return $deletedRows;
         }
 
-        $this->errorArray[] = "Could not delete user record. Check id.";
+        $this->addError(Configuration::DB_ERROR_MSG . "Could not delete user record. Check id.");
         return false;
     }
 
@@ -261,12 +261,30 @@ class Model
                 $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
-                $this->errorArray[] = $e->getMessage();
+                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
         }
 
         return $db;
+    }
+    
+    /**
+     * Returns the error array.
+     * 
+     * @return array            Array of strings of error messages.
+     */
+    public function getErrors() {
+        return $this->errorArray;
+    }
+    
+    /**
+     * Adds a new string with error message.
+     * 
+     * @param string $s         String containing error message. 
+     */
+    public function addError($s) {
+        $this->errorArray[] = $s;
     }
     
 }

@@ -18,4 +18,12 @@ $controller = new Controller();
 $url = $_SERVER['QUERY_STRING'];
 
 // Direct the route given the url information.
-$controller->directRoute($url);
+$results = $controller->directRoute($url);
+
+echo '<pre>';
+echo "Results: "; var_dump($results);
+echo '</pre>';
+
+echo '<pre>';
+echo "Errors: "; var_dump($controller->getErrors());
+echo '</pre>';

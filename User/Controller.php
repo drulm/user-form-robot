@@ -4,16 +4,48 @@ require_once 'Model.php';
 
 //namespace User;
 
+/**
+ *
+ * User controller
+ *
+ * PHP version 7.0
+ *
+ */
 Class Controller
 {
     
+    /**
+     * Array of parameters from url, either by path or query parameters.
+     * 
+     * @var array           Paramater array.
+     */
     protected $parameters = [];
+    
+    /**
+     * The Model / database class for User.
+     * 
+     * @var Model                   User Model class instance.
+     */
+    protected $user;
 
+    /**
+     * Class constructor
+     * 
+     * @param array $parameters     Array of string, optional parameters from URL.
+     */
     public function __construct($parameters = NULL) 
     {
+        $this->user = new Model();
         $this->parameters = $parameters;
     }
 
+    /**
+     * Analyse the URL route for User.
+     * 
+     * @param string $url           The URL string.          
+     * 
+     * @return boolean              True if route is valid for user, false otherwise.
+     */
     public function analyseRoute($url) 
     {
         parse_str($url, $query);
@@ -44,118 +76,117 @@ Class Controller
             $query = ['index' => ''];
         }
         
-        $this->parameters = [
-            'command' => $command,
-            'query' => $query
-            ];
+        $this->parameters = ['command' => $command, 'query' => $query];
         
-        echo '<pre>';
-            echo "path: "; var_dump($path);
+        if (Configuration::DEBUG) {
+            echo "<pre>path: "; var_dump($path);
             echo "path_elements: "; var_dump($path_elements);
             echo "query: "; var_dump($query);
-            echo 'count($path_elements)'; var_dump(count($path_elements));
-            echo "command: "; var_dump($command);
-        echo '</pre>';
+            echo "command: "; var_dump($command); echo '</pre>';
+        }
         
-        return strlen($command) > 0 && !empty($query);
+        $validRoute = strlen($command) > 0 && !empty($query);
+        
+        if (!$validRoute) {
+            $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route. Check path and parameters.");
+        }
+        
+        return $validRoute;
     }
 
+    /**
+     * A dispatcher to direct the route by action (command) type.
+     * Create, Read, Update, Delete, and Index (Read All).
+     * 
+     * @param string $url          Path and query parameters from URL.
+     * 
+     * @return boolean             True if command successful.
+     */
     public function directRoute($url)
-    {
-        echo "in directRoute [" . $url . "]<br />";
-        
+    {   
         $routeGood = $this->analyseRoute($url);
-        echo '<pre>';
-            echo "routeGood: "; var_dump($routeGood);
-        echo '</pre>';
+        
+        $results = false;
         
         if ($routeGood) {
 
             switch ($this->parameters['command']) {
                 case 'create':
-                    echo "*** create in model";
-                    $this->createUser();
+                    $results = $this->createUser();
                     break;
                 
                 case 'read':
-                    echo "***  read in model";
-                    $this->readUser();
+                    $results = $this->readUser();
                     break;
                 
                 case 'index':
-                    echo "***  index in model";
-                    $this->indexUser();
+                    $results = $this->indexUser();
                     break;
                 
                 case 'update':
-                    echo "*** update in model";
-                    $this->updateUser();
+                    $results = $this->updateUser();
                     break;
                 
                 case 'delete':
-                    echo "*** delete in model";
-                    $this->deleteUser();
+                    $results = $this->deleteUser();
                     break;
                 
                 default:
-                    echo "*** no command for string";
+                    $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid command.");
             }
         }
         else {
-            echo "Some error case here";
+            $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route.");
         }
 
+        return $results;
     }
     
+    /**
+     * Update a user at an ID key.
+     * 
+     * @return boolean          Returns true if updated correctly.
+     */
     public function updateUser() 
     {
-        $user = new Model();
+        //$user = new Model();
         
         $params = $this->getQueryParams();
         
         if ($params) {
-
-            $results = $user->update($params);
-
-            if ($results === true) {
-                echo '<pre>';
-                echo "update: "; var_dump($results);
-                echo '</pre>';
-                return $results;
-            }
+            $results = $this->user->update($params);
+            return $results;
         }
-        echo '<pre>';
-        echo "Could not update: "; var_dump($results);
-        echo '</pre>';
+        $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not update, check parameters.");
         return false;
     }
     
+    /**
+     * Create a new user, requires all parameters, except ID.
+     * 
+     * @return boolean          Returns true if user created correctly.
+     */
     public function createUser() 
-    {
-        $user = new Model();
-        
+    {   
         $params = $this->getQueryParams();
         
         if ($params) {
-
-            $results = $user->create($params);
-
-            if ($results === true) {
-                echo '<pre>';
-                echo "create: "; var_dump($results);
-                echo '</pre>';
-                return $results;
+            $results = $this->user->create($params);
+            return $results;
             }
-        }
-        echo '<pre>';
-        echo "Could not create: "; var_dump($results);
-        echo '</pre>';
+
+        $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not create new user, check parameters.");
         return false;
     }
     
+    /**
+     * Delete a user for an ID key.
+     * 
+     * @return boolean              Returns true if user deleted succesfully.
+     */
     public function deleteUser() 
     {
-        $user = new Model();
+        //$user = new Model();
         
         $id = $this->getID();
         
@@ -163,80 +194,98 @@ Class Controller
 
         if ($id) {
 
-            $results = $user->delete($id);
+            $results = $this->user->delete($id);
 
-            if ($results and $results > 0) {
-                echo '<pre>';
-                echo "delete: "; var_dump($results);
-                echo '</pre>';
-                return $results;
+            if ($results == 0) {
+                $this->user->addError(Configuration::CONT_ERROR_MSG . "User could not be deleted.");
+                return false;
             }
+            
+            return $results;
         }
-        echo '<pre>';
-        echo "Could not delete: "; var_dump($results);
-        echo '</pre>';
+
+        $this->user->addError(Configuration::CONT_ERROR_MSG . "User could not be deleted. Check ID.");
         return false;
     }
     
+    /**
+     * Read a single user at an ID.
+     * 
+     * @return mixed            Returns data from read command or false if could not read.
+     */
     public function readUser() 
-    {
-        $user = new Model();
-        
+    {   
         $id = $this->getID();
         
         if ($id) {
-
-            $results = $user->read($id);
-
-            if ($results !== false) {
-                echo '<pre>';
-                echo "read: "; var_dump($results);
-                echo '</pre>';
-                return $results;
+            $results = $this->user->read($id);
+            if (!$results) {
+                $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, check id.");
             }
-        }
-        echo '<pre>';
-        echo "Could not read: "; var_dump($results);
-        echo '</pre>';
-        return false;
-    }
-
-    public function indexUser() 
-    {
-        $user = new Model();
-
-        $results = $user->read();
-
-        if ($results) {
-            echo '<pre>';
-            echo "index: "; var_dump($results);
-            echo '</pre>';
             return $results;
         }
-        echo '<pre>';
-        echo "Could not index-read: "; var_dump($this->getParams());
-        echo '</pre>';
+        
+        $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database for this id.");
         return false;
     }
 
+    /**
+     * Read and return all user data.
+     * 
+     * @return mixed            Returns all user data, or false if could not read users from database.  
+     */
+    public function indexUser() 
+    {
+        $results = $this->user->read();
+
+        if (!$results) {
+            $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not index (read all) users from database.");
+        }
+        
+        return $results;
+    }
+
+    /**
+     * Returns ID for current URL parameters.
+     * 
+     * @return mixed            Returns ID for 'id' parameter, or false if could not find ID.
+     */
     public function getID()
     {
         $params = $this->getQueryParams();
         if (isset($params['id']) && is_numeric($params['id'])) {
             return $params['id'];
         }
+        $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not find id.");
         return false;
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function getParams()
     {
         return $this->parameters;
     }
     
-    
+    /**
+     * Gets and returns only the query parameters, not the path.
+     * 
+     * @return array            Query parameters array of string.
+     */
     public function getQueryParams()
     {
         return $this->getParams()['query'];
+    }
+    
+    /**
+     * Returns the error array, Controller version.
+     * 
+     * @return array            Array of strings of error messages.
+     */
+    public function getErrors() {
+        return $this->user->getErrors();
     }
     
 }
