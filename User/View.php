@@ -51,6 +51,8 @@ class View
                 break;
 
             default:
+                $html = $this->renderRouteError($data);
+                break;
         }
         
         $errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
@@ -67,8 +69,25 @@ class View
     public function renderDefaultPage($data) 
     {
 $markup = <<<HTML
-    <h1>User MVC site</h1>
-    <h2>Default Page</h2>
+        <h1>User MVC site</h1>
+        <h2>Default Page</h2>
+        <h3>Command Examples:</h3>
+        <ul>
+        <li>CREATE: /create/e/ignacy@portal.dev/fn/Ignacy/ln/Trzewiczek/p/PortalGames</li>
+        <li>CREATE: /index.php?command=create&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames</li>
+        <li>READ: read/id/100</li>
+        <li>READ: index.php?command=read&id=100</li>
+        <li>UPDATE: /update/e/ignacy@portal.dev/fn/Ignacy/ln/Trzewiczek/p/PortalGames/id/100</li>
+        <li>UPDATE: /index.php?command=update&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames&id=100</li>
+        <li>DELETE: /delete/id/100</li>
+        <li>DELETE: /index.php?command=delete&id=100</li>
+        <li>INDEX (list all): /index</li>
+        <li>INDEX (list all): /index.php?command=index</li>
+        <li>NON VALID ROUTE EXAMPLE: /AnythingElse</li>
+        <li>NON VALID ROUTE EXAMPLE: /index.php?command=AnythingElse</li>
+        <li>DEFAULT PAGE / HOST: example: localhost</li>
+        </ul>
+    
 HTML;
         
         return $markup;
@@ -88,9 +107,9 @@ HTML;
         $query = ob_get_clean();
 
 $markup = <<<HTML
-    <h1>Route Error:</h1>
-    <h2>Command: {$data['command']}</h2>
-    <h2>Query: {$query}</h2>
+        <h1>Route Error:</h1>
+        <h2>Command: {$data['command']}</h2>
+        <h2>Query: {$query}</h2>
 HTML;
         
         return $markup;
@@ -106,11 +125,11 @@ HTML;
     {
 
 $markup = <<<HTML
-    <h1>User Id: {$data['id_users']}</h1>
-    <h2>Email: {$data['email']}</h2>
-    <h2>First name: {$data['first_name']}</h2>
-    <h2>Last name: {$data['last_name']}</h2>
-    <h2>Password (hashed): {$data['passwd']}</h2>
+        <h1>User Id: {$data['id_users']}</h1>
+        <h2>Email: {$data['email']}</h2>
+        <h2>First name: {$data['first_name']}</h2>
+        <h2>Last name: {$data['last_name']}</h2>
+        <h2>Password (hashed): {$data['passwd']}</h2>
 HTML;
         
         return $markup;
@@ -155,8 +174,8 @@ HTML;
         $outcome = $value ? "true" : "false";
         
 $markup = <<<HTML
-    <h1>Action: {$action}</h1>
-    <h2>Outcome: {$outcome}</h2>
+        <h1>Action: {$action}</h1>
+        <h2>Outcome: {$outcome}</h2>
 HTML;
         
         return $markup;
@@ -182,18 +201,18 @@ HTML;
     {
 
 $markup = <<<HTML
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        {$html}
-        {$errors}
-    </body>
-</html>
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>TODO supply a title</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body>
+                {$html}
+                {$errors}
+            </body>
+        </html>
 HTML;
     
     echo $markup;
