@@ -79,12 +79,16 @@ $markup = <<<HTML
         <li>CREATE: /index.php?command=create&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames</li>
         <li>READ: read/id/100</li>
         <li>READ: index.php?command=read&id=100</li>
+        <li>READ json output: /read/id/6/type/json</li>
+        <li>READ json output: /index.php?command=read&id=6&type=json</li>
         <li>UPDATE: /update/e/ignacy@portal.dev/fn/Ignacy/ln/Trzewiczek/p/PortalGames/id/100</li>
         <li>UPDATE: /index.php?command=update&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames&id=100</li>
         <li>DELETE: /delete/id/100</li>
         <li>DELETE: /index.php?command=delete&id=100</li>
         <li>INDEX (list all): /index</li>
+        <li>INDEX (list all) json output: /index/type/json</li>
         <li>INDEX (list all): /index.php?command=index</li>
+        <li>INDEX (list all): /index.php?command=index&type=json</li>
         <li>NON VALID ROUTE EXAMPLE: /AnythingElse</li>
         <li>NON VALID ROUTE EXAMPLE: /index.php?command=AnythingElse</li>
         <li>DEFAULT PAGE / HOST: example: localhost</li>
