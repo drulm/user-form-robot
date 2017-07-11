@@ -29,70 +29,28 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         
     }
 
-    /**
-     * @covers Model::create
-     * @todo   Implement testCreate().
-     */
     public function testCreate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Model::update
-     * @todo   Implement testUpdate().
-     */
     public function testUpdate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Model::read
-     * @todo   Implement testRead().
-     */
     public function testRead() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Model::delete
-     * @todo   Implement testDelete().
-     */
     public function testDelete() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Model::getErrors
-     * @todo   Implement testGetErrors().
-     */
     public function testGetErrors() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Model::addError
-     * @todo   Implement testAddError().
-     */
     public function testAddError() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
 }

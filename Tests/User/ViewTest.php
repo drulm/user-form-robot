@@ -28,103 +28,104 @@ class ViewTest extends PHPUnit_Framework_TestCase {
         
     }
 
-    /**
-     * @covers View::render
-     * @todo   Implement testRender().
-     */
     public function testRender() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers View::renderDefaultPage
-     * @todo   Implement testRenderDefaultPage().
-     */
     public function testRenderDefaultPage() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers View::renderRouteError
-     * @todo   Implement testRenderRouteError().
-     */
     public function testRenderRouteError() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers View::renderRead
-     * @todo   Implement testRenderRead().
-     */
     public function testRenderRead() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers View::renderIndex
-     * @todo   Implement testRenderIndex().
-     */
     public function testRenderIndex() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            0 => ['key1' => 'value1', 'key2' => 'value2'],
+            1 => ['key3' => 'value3', 'key4' => 'value4']
+            ];
+        $result = $this->object->renderIndex($data);
+
+$expected = <<<HTML
+<table><thead><tr><th>key1</th><th>key2</tr></thead><tbody><tr><td>value1</td><td>value2</td></tr><tr><td>value3</td><td>value4</td></tr></tbody></table>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @covers View::renderOtherAction
-     * @todo   Implement testRenderOtherAction().
-     */
     public function testRenderOtherAction() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = ['action' => false];
+        $result = $this->object->renderOtherAction($data);
+
+$expected = <<<HTML
+<h1>Action: action</h1>
+<h2>Outcome: false</h2>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @covers View::renderJson
-     * @todo   Implement testRenderJson().
-     */
     public function testRenderJson() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = ['item1', 'item2', 'item2'];
+        
+        ob_start();
+        $this->object->renderJson($data);
+        $result = ob_get_clean();
+
+$expected = <<<HTML
+[
+    "item1",
+    "item2",
+    "item2"
+]
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
+
     /**
-     * @covers View::renderTemplate
-     * @todo   Implement testRenderTemplate().
+     * 
      */
     public function testRenderTemplate() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $html = 'html';
+        $errors = 'error';
+        
+        ob_start();
+        $this->object->renderTemplate($html, $errors);
+        $result = ob_get_clean();
+        
+$expected = <<<HTML
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        html
+        error
+    </body>
+</html>
+HTML;
+
+        $this->assertEquals($expected, $result);
     }
 
     /**
-     * @covers View::renderErrors
-     * @todo   Implement testRenderErrors().
+     * 
      */
     public function testRenderErrors() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $errors = ['err1', 'err2', 'err3'];
+        $result = $this->object->renderErrors($errors);
+        $expected = '<pre><h4>err1</h4></pre><pre><h4>err2</h4></pre><pre><h4>err3</h4></pre>';
+        $this->assertEquals($expected, $result);
     }
 
 }

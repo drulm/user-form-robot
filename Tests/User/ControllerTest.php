@@ -32,147 +32,56 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
         
     }
 
-    /**
-     * @covers Controller::analyseRoute
-     * @todo   Implement testAnalyseRoute().
-     */
     public function testAnalyseRoute() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::directRoute
-     * @todo   Implement testDirectRoute().
-     */
     public function testDirectRoute() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::routeError
-     * @todo   Implement testRouteError().
-     */
     public function testRouteError() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::defaultPage
-     * @todo   Implement testDefaultPage().
-     */
     public function testDefaultPage() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::updateUser
-     * @todo   Implement testUpdateUser().
-     */
     public function testUpdateUser() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::createUser
-     * @todo   Implement testCreateUser().
-     */
     public function testCreateUser() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::deleteUser
-     * @todo   Implement testDeleteUser().
-     */
     public function testDeleteUser() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::readUser
-     * @todo   Implement testReadUser().
-     */
     public function testReadUser() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::indexUser
-     * @todo   Implement testIndexUser().
-     */
     public function testIndexUser() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::getID
-     * @todo   Implement testGetID().
-     */
     public function testGetID() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::getParams
-     * @todo   Implement testGetParams().
-     */
     public function testGetParams() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::getQueryParams
-     * @todo   Implement testGetQueryParams().
-     */
     public function testGetQueryParams() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
-    /**
-     * @covers Controller::getErrors
-     * @todo   Implement testGetErrors().
-     */
     public function testGetErrors() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertEquals(1, 1);
     }
 
 }
