@@ -1,9 +1,9 @@
 <?php
 
-require_once '../params/Configuration.php';
+//require_once '../params/Configuration.php';
+require_once 'params/Configuration.php';
 
 //use \PDO;
-
 
 /**
  *
@@ -147,8 +147,10 @@ class Model
                 $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
+            
+            $updatedRows = $stmt->rowCount();
 
-            return $results;
+            return $updatedRows;
         }
         
         $this->addError(Configuration::DB_ERROR_MSG . "Could not update existing user record. Check parameters.");
@@ -197,7 +199,7 @@ class Model
                 }        
                 return is_array($fetch) ? $fetch : false;
             }
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         $this->addError(Configuration::DB_ERROR_MSG . "Could not read user record. Check id used.");
@@ -274,7 +276,8 @@ class Model
      * 
      * @return array            Array of strings of error messages.
      */
-    public function getErrors() {
+    public function getErrors() 
+    {
         return $this->errorArray;
     }
     
@@ -283,7 +286,8 @@ class Model
      * 
      * @param string $s         String containing error message. 
      */
-    public function addError($s) {
+    public function addError($s) 
+    {
         $this->errorArray[] = $s;
     }
     
