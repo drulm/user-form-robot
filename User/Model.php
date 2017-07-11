@@ -1,7 +1,8 @@
 <?php
 
 //require_once '../params/Configuration.php';
-require_once 'params/Configuration.php';
+//require_once 'params/Configuration.php';
+require_once(dirname(__FILE__) . '/../params/Configuration.php');
 
 //use \PDO;
 
@@ -67,21 +68,29 @@ class Model
                     VALUES (:email, :first_name, :last_name, :passwd)';
 
             $db = static::connectDB();
-            $stmt = $db->prepare($sql);
+            
+            if ($db instanceof PDO) {
 
-            $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
-            $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
-            $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
-            $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
+                $stmt = $db->prepare($sql);
 
-            try {
-                $results = $stmt->execute();   
-            } catch (PDOException $e) {
-                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
-                return false;
+                $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
+                $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
+                $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
+                $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
+
+                try {
+                    $results = $stmt->execute();   
+                } catch (PDOException $e) {
+                    $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
+                    return false;
+                }
+
+                return $results;
             }
-
-            return $results;
+            else {
+                $this->addError(Configuration::DB_ERROR_MSG . $db);
+            }
+             
         }
 
         $this->addError(Configuration::DB_ERROR_MSG . "Could not create new user record. Check parameters.");
@@ -124,33 +133,41 @@ class Model
             $sql = 'UPDATE users SET ' . implode(", ", $q) . ' WHERE id_users = :id_users';
 
             $db = static::connectDB();
-            $stmt = $db->prepare($sql);
+                        
+            if ($db instanceof PDO) {
 
-            if (isset($params['e'])) {
-                $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
-            }
-            if (isset($params['fn'])) {
-                $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
-            }
-            if (isset($params['ln'])) {
-                $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
-            }
-            if (isset($params['p'])) {
-                $passwordHash = password_hash($params['p'], PASSWORD_DEFAULT);
-                $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
-            }
-            $stmt->bindValue(':id_users', $params['id'], PDO::PARAM_INT);
+                $stmt = $db->prepare($sql);
 
-            try {
-                $results = $stmt->execute();
-            } catch (PDOException $e) {
-                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
-                return false;
+                if (isset($params['e'])) {
+                    $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
+                }
+                if (isset($params['fn'])) {
+                    $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
+                }
+                if (isset($params['ln'])) {
+                    $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
+                }
+                if (isset($params['p'])) {
+                    $passwordHash = password_hash($params['p'], PASSWORD_DEFAULT);
+                    $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
+                }
+                $stmt->bindValue(':id_users', $params['id'], PDO::PARAM_INT);
+
+                try {
+                    $results = $stmt->execute();
+                } catch (PDOException $e) {
+                    $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
+                    return false;
+                }
+
+                $updatedRows = $stmt->rowCount();
+
+                return $updatedRows;
+            }
+            else {
+                $this->addError(Configuration::DB_ERROR_MSG . $db);
             }
             
-            $updatedRows = $stmt->rowCount();
-
-            return $updatedRows;
         }
         
         $this->addError(Configuration::DB_ERROR_MSG . "Could not update existing user record. Check parameters.");
@@ -176,30 +193,37 @@ class Model
         }
 
         $db = static::connectDB();
-        $stmt = $db->prepare($sql);
         
-        if ($id) {
-                $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
-            }
-        
-        try {
-            $results = $stmt->execute();
-        } catch (PDOException $e) {
-            $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
-            return false;
-        }
+        if ($db instanceof PDO) {
+            
+            $stmt = $db->prepare($sql);
 
-        // Return all or one entry depending on if id was passed.
-        if ($stmt) {
             if ($id) {
-                $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
-                if (!$fetch) {
-                    is_array($fetch);
-                    $this->addError(Configuration::DB_ERROR_MSG . "Could not read user row.");
-                }        
-                return is_array($fetch) ? $fetch : false;
+                    $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+                }
+
+            try {
+                $results = $stmt->execute();
+            } catch (PDOException $e) {
+                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
+                return false;
             }
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return all or one entry depending on if id was passed.
+            if ($stmt) {
+                if ($id) {
+                    $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if (!$fetch) {
+                        is_array($fetch);
+                        $this->addError(Configuration::DB_ERROR_MSG . "Could not read user row.");
+                    }        
+                    return is_array($fetch) ? $fetch : false;
+                }
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }
+        else {
+            $this->addError(Configuration::DB_ERROR_MSG . $db);
         }
 
         $this->addError(Configuration::DB_ERROR_MSG . "Could not read user record. Check id used.");
@@ -220,19 +244,27 @@ class Model
                     WHERE id_users = :id_users';
 
             $db = static::connectDB();
-            $stmt = $db->prepare($sql);
-            $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+                
+            if ($db instanceof PDO) {
+                
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
 
-            try {
-                $results = $stmt->execute();
-            } catch (PDOException $e) {
-                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
-                return false;
+                try {
+                    $results = $stmt->execute();
+                } catch (PDOException $e) {
+                    $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
+                    return false;
+                }
+
+                $deletedRows = $stmt->rowCount();
+
+                return $deletedRows;
             }
-
-            $deletedRows = $stmt->rowCount();
-
-            return $deletedRows;
+            else {
+                $this->addError(Configuration::DB_ERROR_MSG . $db);
+            }
+            
         }
 
         $this->addError(Configuration::DB_ERROR_MSG . "Could not delete user record. Check id.");
@@ -263,8 +295,7 @@ class Model
                 $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
-                $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
-                return false;
+                return $e->getMessage();
             }
         }
 

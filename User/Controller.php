@@ -1,7 +1,9 @@
 <?php
 
-require_once 'Model.php';
-require_once 'View.php';
+//require_once 'Model.php';
+//require_once 'View.php';
+require_once(dirname(__FILE__) . '/Model.php');
+require_once(dirname(__FILE__) . '/View.php');
 
 //namespace User;
 
