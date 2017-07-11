@@ -28,22 +28,99 @@ class ViewTest extends PHPUnit_Framework_TestCase {
         
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRender() {
-        $this->assertEquals(1, 1);
+        $data = [
+            'command' => 'testCommand',
+            'query' => 
+                [
+                    'q1' => 'v1',
+                    'q2' => 'v2',
+                ],
+            ];
+        
+        ob_start();
+        $this->object->render($data, 'noCommand', ['err1', 'err2']);
+        $result = ob_get_clean();
+        $result = substr($result, 0, 15);
+        
+$expected = <<<HTML
+<!DOCTYPE html>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderDefaultPage() {
-        $this->assertEquals(1, 1);
+        $result = substr($this->object->renderDefaultPage(), 0, 22);
+
+$expected = <<<HTML
+<h1>User MVC site</h1>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderRouteError() {
-        $this->assertEquals(1, 1);
+        $data = [
+            'command' => 'testCommand',
+            'query' => 
+                [
+                    'q1' => 'v1',
+                    'q2' => 'v2',
+                ],
+            ];
+        $result = $this->object->renderRouteError($data);
+
+$expected = <<<HTML
+<h1>Route Error:</h1>
+<h2>Command: testCommand</h2>
+<h2>Query: Array
+(
+    [q1] => v1
+    [q2] => v2
+)
+</h2>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderRead() {
-        $this->assertEquals(1, 1);
+        $data = [
+            'id_users' => 1,
+            'email' => 'foo@test.dev',
+            'first_name' => 'First',
+            'last_name' => 'Last',
+            'passwd' => 'password',
+            ];
+        $result = $this->object->renderRead($data);
+
+$expected = <<<HTML
+<h1>User Id: 1</h1>
+<h2>Email: foo@test.dev</h2>
+<h2>First name: First</h2>
+<h2>Last name: Last</h2>
+<h2>Password (hashed): password</h2>
+HTML;
+        
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderIndex() {
         $data = [
             0 => ['key1' => 'value1', 'key2' => 'value2'],
@@ -58,6 +135,9 @@ HTML;
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderOtherAction() {
         $data = ['action' => false];
         $result = $this->object->renderOtherAction($data);
@@ -70,6 +150,9 @@ HTML;
         $this->assertEquals($expected, $result);
     }
 
+    /**
+     * @TODO Improve test to check for valid HTML or structure.
+     */
     public function testRenderJson() {
         $data = ['item1', 'item2', 'item2'];
         
@@ -88,9 +171,8 @@ HTML;
         $this->assertEquals($expected, $result);
     }
 
-
     /**
-     * 
+     * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderTemplate() {
         $html = 'html';
@@ -119,7 +201,7 @@ HTML;
     }
 
     /**
-     * 
+     * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderErrors() {
         $errors = ['err1', 'err2', 'err3'];

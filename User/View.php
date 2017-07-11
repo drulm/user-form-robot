@@ -44,7 +44,7 @@ class View
                 break;
             
             case 'defaultPage':
-                $html = $this->renderDefaultPage($data);
+                $html = $this->renderDefaultPage();
                 break;
             
             case 'json':
@@ -67,7 +67,7 @@ class View
      * @param type $data            Parameter data, if needed.
      * @return string               The HTML to display.
      */
-    public function renderDefaultPage($data) 
+    public function renderDefaultPage() 
     {
 $markup = <<<HTML
 <h1>User MVC site</h1>
@@ -108,7 +108,7 @@ HTML;
     {
         
         ob_start();
-        var_dump($data['query']);
+        print_r($data['query']);
         $query = ob_get_clean();
 
 $markup = <<<HTML
