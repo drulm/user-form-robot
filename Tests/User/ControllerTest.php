@@ -15,7 +15,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
      * @var Controller
      */
     protected $object;
-
+    
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -37,15 +37,40 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testDirectRoute() {
-        $this->assertEquals(1, 1);
+        $url = '/read/id/1';
+        ob_start();
+        $results = $this->object->directRoute($url);
+        $text = ob_get_clean();
+        $params = $this->object->getParams();
+        $id = $this->object->getID();
+        $query = $this->object->getQueryParams();
+        $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '1']]);
+        $this->assertEquals($id, 1);
+        $this->assertEquals($query, ['id' => '1']);
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(false, $results);
     }
 
     public function testRouteError() {
-        $this->assertEquals(1, 1);
+        ob_start();
+        $results = $this->object->routeError();
+        $text = ob_get_clean();
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(false, $results);
     }
 
+    /**
+     * 
+     */
     public function testDefaultPage() {
-        $this->assertEquals(1, 1);
+        ob_start();
+        $results = $this->object->defaultPage();
+        $text = ob_get_clean();
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(true, $results);
     }
 
     public function testUpdateUser() {
@@ -60,28 +85,73 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(1, 1);
     }
 
+    /**
+     * 
+     */
     public function testReadUser() {
-        $this->assertEquals(1, 1);
+        ob_start();
+        $results = $this->object->readUser();
+        $text = ob_get_clean();
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(false, $results);
     }
 
+    /**
+     * 
+     */
     public function testIndexUser() {
-        $this->assertEquals(1, 1);
+        ob_start();
+        $results = $this->object->indexUser();
+        $text = ob_get_clean();
+        $this->assertInternalType('array', $results);
+        $this->assertInternalType('string', $text);
     }
 
+    /**
+     * 
+     */
     public function testGetID() {
-        $this->assertEquals(1, 1);
+        $result = $this->object->getID();
+        $expected = false;
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * 
+     */
     public function testGetParams() {
-        $this->assertEquals(1, 1);
+        $result = $this->object->getParams();
+        $expected = NULL;
+        $this->assertEquals($expected, $result);
     }
 
+    /**
+     * 
+     */
     public function testGetQueryParams() {
-        $this->assertEquals(1, 1);
+        $result = $this->object->getQueryParams();
+        $expected = NULL;
+        $this->assertEquals($expected, $result);
+    }
+    
+    /**
+     * 
+     */
+    public function testGetUser() {
+        $result = $this->object->getUser();
+        $this->assertInstanceOf(Model::class, $result);
     }
 
+    /**
+     * 
+     */
     public function testGetErrors() {
-        $this->assertEquals(1, 1);
+        $this->object->getUser()->addError('err1');
+        $this->object->getUser()->addError('err2');
+        $result = $this->object->getErrors();
+        $expected = [0 => 'err1', 1 => 'err2'];
+        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
     }
 
 }

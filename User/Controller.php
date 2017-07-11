@@ -338,6 +338,16 @@ Class Controller
     }
     
     /**
+     * Returns the User model instance.
+     * 
+     * @return User             returns user model instance.
+     */
+    public function getUser() 
+    {
+        return $this->user;
+    }
+    
+    /**
      * Returns the error array, Controller version.
      * 
      * @return array            Array of strings of error messages.
