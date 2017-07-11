@@ -33,7 +33,16 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testAnalyseRoute() {
-        $this->assertEquals(1, 1);
+        $url = '/read/id/1';
+        $results = $this->object->analyseRoute($url);
+        $params = $this->object->getParams();
+        $id = $this->object->getID();
+        $query = $this->object->getQueryParams();
+        $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '1']]);
+        $this->assertEquals($id, 1);
+        $this->assertEquals($query, ['id' => '1']);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(true, $results);
     }
 
     public function testDirectRoute() {
@@ -89,12 +98,21 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
      * 
      */
     public function testReadUser() {
+        $url = '/read/id/0';
+        $results = $this->object->analyseRoute($url);
         ob_start();
         $results = $this->object->readUser();
         $text = ob_get_clean();
+        $params = $this->object->getParams();
+        $id = $this->object->getID();
+        $query = $this->object->getQueryParams();
+        $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '0']]);
+        $this->assertEquals($id, 0);
+        $this->assertEquals($query, ['id' => '0']);
         $this->assertInternalType('string', $text);
         $this->assertInternalType('boolean', $results);
         $this->assertEquals(false, $results);
+        $this->assertTrue(strpos($text, 'Could not read user from database'));
     }
 
     /**
