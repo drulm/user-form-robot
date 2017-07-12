@@ -12,6 +12,8 @@ require_once(dirname(__FILE__) . '/../params/Configuration.php');
  *
  * PHP version 7.0
  * 
+ * @TODO namespace
+ * 
  * Note: For parameter names use these conventions:
  * 
  * id = id
@@ -61,30 +63,32 @@ class Model
             isset($params['ln']) &&
             isset($params['p'])
             ) {
-            
             $passwordHash = password_hash($params['p'], PASSWORD_DEFAULT);
-            
             $sql = 'INSERT INTO users (email, first_name, last_name, passwd)
                     VALUES (:email, :first_name, :last_name, :passwd)';
-
-            $db = static::connectDB();
             
+            $db = static::connectDB();
             if ($db instanceof PDO) {
 
                 $stmt = $db->prepare($sql);
-
                 $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
                 $stmt->bindValue(':first_name', $params['fn'], PDO::PARAM_STR);
                 $stmt->bindValue(':last_name', $params['ln'], PDO::PARAM_STR);
                 $stmt->bindValue(':passwd', $passwordHash, PDO::PARAM_STR);
 
                 try {
-                    $results = $stmt->execute();   
+                    $results = $stmt->execute(); 
+                    
+                    // Return the index ID if valid.
+                    if ($results) {
+                        $id = $db->lastInsertId();
+                        $results = $id;
+                    }
+         
                 } catch (PDOException $e) {
                     $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                     return false;
                 }
-
                 return $results;
             }
             else {
@@ -106,7 +110,6 @@ class Model
      */
     public function update($params)
     {
-        
         if (
             isset($params['id']) &&
                 (
@@ -116,7 +119,6 @@ class Model
                     isset($params['p'])
                 )
             ) {
-            
             $q = [];
             if (isset($params['e'])) {
                 $q[] = "email = :email";
@@ -132,12 +134,10 @@ class Model
             }
             $sql = 'UPDATE users SET ' . implode(", ", $q) . ' WHERE id_users = :id_users';
 
-            $db = static::connectDB();
-                        
+            $db = static::connectDB();      
             if ($db instanceof PDO) {
 
                 $stmt = $db->prepare($sql);
-
                 if (isset($params['e'])) {
                     $stmt->bindValue(':email', $params['e'], PDO::PARAM_STR);
                 }
@@ -161,7 +161,6 @@ class Model
                 }
 
                 $updatedRows = $stmt->rowCount();
-
                 return $updatedRows;
             }
             else {
@@ -193,14 +192,13 @@ class Model
         }
 
         $db = static::connectDB();
-        
         if ($db instanceof PDO) {
             
             $stmt = $db->prepare($sql);
 
             if ($id) {
-                    $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
-                }
+                $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
+            }
 
             try {
                 $results = $stmt->execute();
@@ -244,12 +242,10 @@ class Model
                     WHERE id_users = :id_users';
 
             $db = static::connectDB();
-                
             if ($db instanceof PDO) {
                 
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
-
                 try {
                     $results = $stmt->execute();
                 } catch (PDOException $e) {
@@ -258,7 +254,6 @@ class Model
                 }
 
                 $deletedRows = $stmt->rowCount();
-
                 return $deletedRows;
             }
             else {
@@ -282,15 +277,12 @@ class Model
     {
         // Initial 
         static $db = null;
-
         if ($db === null) {
-
             $dsn = 
                 'mysql:host=' . Configuration::DB_HOST .
                 ';dbname=' . Configuration::DB_SCHEMA .
                 ';port=' . Configuration::DB_MYSQL_PORT . 
                 ';charset=utf8';
-
             try {
                 $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -298,7 +290,6 @@ class Model
                 return $e->getMessage();
             }
         }
-
         return $db;
     }
     

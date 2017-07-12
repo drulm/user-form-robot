@@ -5,6 +5,8 @@
  * User view
  *
  * PHP version 7.0
+ * 
+ * @TODO namespace
  */
 class View
 {

@@ -12,6 +12,8 @@ require_once(dirname(__FILE__) . '/View.php');
  * User controller
  *
  * PHP version 7.0
+ * 
+ * @TODO namespace
  *
  */
 Class Controller
@@ -230,13 +232,14 @@ Class Controller
             $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not create new user, check parameters.");
         }
         $this->view->render(['create' => $results], 'otherAction', $this->getErrors());
+        
         return $results;
     }
     
     /**
      * Delete a user for an ID key.
      * 
-     * @return boolean              Returns true if user deleted succesfully.
+     * @return boolean              Returns true if user deleted successfully.
      */
     public function deleteUser() 
     {
