@@ -35,7 +35,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * Add data to database -- create
+     * Add data to database -- uses create
      * 
      * @param string $prefix       // Prefix of data to add     
      * @return type
@@ -66,7 +66,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * Validate data -- read
+     * Validate data -- uses read
      * 
      * @param string $prefix        // Prefix of data to check
      * @param type $data            // Data and id arrays to validate
@@ -139,6 +139,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         $data = $this->addData('read');
         $this->validateData('read', $data);
         $this->removeData($data);
+
         // Make sure reading empty data works.
         $this->validateData('read', $data, true);
     }
@@ -159,6 +160,12 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      * Model test for getErrors
      */
     public function testGetErrors() {
+        // Try get errors with nothing added to error array.
+        $result = $this->object->getErrors();
+        $expected = [];
+        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
+        
+        // Add some errors, and then check if Get is working.s
         $this->object->addError('DBerr1');
         $this->object->addError('DBerr2');
         $result = $this->object->getErrors();
