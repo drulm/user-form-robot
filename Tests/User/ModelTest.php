@@ -26,9 +26,10 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->object = new Model;
 
+        // Populate database with test data, and save IDs generated.
         $this->paramList = [];
         $this->idList = [];
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
             $iStr = strval($i);
             $this->paramList[$i] = [
                 'e' => 'email' . $iStr . '@test.dev',
@@ -39,7 +40,6 @@ class ModelTest extends PHPUnit_Framework_TestCase {
             // Save the list of IDs for created users.
             $this->idList[$i] = $this->object->create($this->paramList[$i]);
         }
-        var_dump($this->idList);
     }
 
     /**
@@ -47,7 +47,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        for ($i = 1; $i <= 10; $i++) {
+        // Delete data from test database.
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
             $this->object->delete($this->idList[$i]);
         }
     }
@@ -60,8 +61,22 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(1, 1);
     }
 
+    /**
+     * 
+     */
     public function testRead() {
-        $this->assertEquals(1, 1);
+        // Read all entries written to database and compare with original parameters.
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            // Read the data from the setup
+            $result = $this->object->read($this->idList[ $i ]);
+            // Check each column
+            $this->assertEquals($this->paramList[$i]['e'], $result['email']);
+            $this->assertEquals($this->paramList[$i]['fn'], $result['first_name']);
+            $this->assertEquals($this->paramList[$i]['ln'], $result['last_name']);
+            $this->assertEquals($this->idList[ $i ], $result['id_users']);
+            // Verify the password hash.
+            $this->assertTrue(password_verify($this->paramList[$i]['p'], $result['passwd']));
+        }
     }
 
     public function testDelete() {
