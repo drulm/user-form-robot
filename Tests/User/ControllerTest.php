@@ -19,11 +19,68 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     protected $object;
     
     /**
+     * @var Array of routes 
+     */
+    protected $routes;
+    
+    /**
+     * @var Array of routes 
+     */
+    protected $routesParams;
+    
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp() {
         $this->object = new Controller;
+        
+        // Define routes to test.
+        $this->routes = [
+            '/index.php?command=read&id=6',
+            '/index.php?command=delete&id=4',
+            '/index.php?command=create&e=e@test.dev&fn=first1&ln=last1&p=password1',
+            '/index.php?command=index',
+            '/index.php?command=read&id=6&type=json',
+            '/index.php?command=index&type=json',
+            '/index.php?command=NoCommand',
+            '/index.php?command=update&e=e@test.dev&fn=first1&ln=last1&p=password1&id=6',
+            '/read/id/6',
+            '/read/id/6/type/json',
+            '/update/e/e@test.dev/fn/first1/ln/last1/p/password1/id/6',
+            '/delete/id/6',
+            '/NoRoute',
+            '/create/e/e@test.dev/fn/first1/ln/last1/p/password1',
+            '/index',
+            '/index/type/json',
+            '/index.php',
+        ];
+        
+        // Define analysed routes as expected output.
+        $this->routesParams = [
+            ['command' => 'read', 'query' => ['command' => 'read', 'id' => '6']],
+            ['command' => 'delete', 'query' => ['command' => 'delete', 'id' => '4']],
+            ['command' => 'create', 'query' => 
+                ['command' => 'create', 'e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1']],
+            ['command' => 'index', 'query' => ['command' => 'index']],
+            ['command' => 'read', 'query' => ['command' => 'read', 'id' => '6', 'type' => 'json']],
+            ['command' => 'index', 'query' => ['command' => 'index', 'type' => 'json']],
+            ['command' => 'NoCommand', 'query' => ['command' => 'NoCommand']],
+            ['command' => 'update', 'query' => 
+                ['command' => 'update', 'e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1', 'id' => '6']],
+            ['command' => 'read', 'query' => ['id' => '6']],
+            ['command' => 'read', 'query' => ['id' => '6', 'type' => 'json']],
+            ['command' => 'update', 'query' => 
+                ['e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1', 'id' => '6']],
+            ['command' => 'delete', 'query' => ['id' => '6']],
+            ['command' => 'NoRoute', 'query' => []],
+            ['command' => 'create', 'query' => 
+                ['e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1']],
+            ['command' => 'index', 'query' => []],
+            ['command' => 'index', 'query' => ['type' => 'json']],
+            ['command' => '', 'query' => []],
+        ];
+        
     }
 
     /**
@@ -31,22 +88,36 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        
     }
 
+    /**
+     * Controller test analyseRoute
+     */
     public function testAnalyseRoute() {
-        $url = '/read/id/1';
-        $results = $this->object->analyseRoute($url);
-        $params = $this->object->getParams();
-        $id = $this->object->getID();
-        $query = $this->object->getQueryParams();
-        $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '1']]);
-        $this->assertEquals($id, 1);
-        $this->assertEquals($query, ['id' => '1']);
-        $this->assertInternalType('boolean', $results);
-        $this->assertEquals(true, $results);
+        // Test all routes and expected outputs.
+        for ($i = 0; $i < count($this->routes); $i++) {
+            $expected = $this->routesParams[$i];
+            
+            // Analyse the route.
+            $url = $this->routes[$i];
+            $results = $this->object->analyseRoute($url);
+            
+            // Segment route into params and/or id.
+            $params = $this->object->getParams();
+            $id = $this->object->getID();
+            $query = $this->object->getQueryParams();
+
+            // Check that are the same.
+            $this->assertEquals($params, $expected);
+            $this->assertEquals($query, $expected['query']);
+            $this->assertInternalType('boolean', $results);
+            //$this->assertEquals(true, $results);
+        }
     }
 
+    /**
+     * Controller test directRoute
+     */
     public function testDirectRoute() {
         $url = '/read/id/0';
         ob_start();
@@ -63,6 +134,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(false, $results);
     }
 
+    /**
+     * Controller test routeError
+     */
     public function testRouteError() {
         ob_start();
         $results = $this->object->routeError();
@@ -73,7 +147,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Controller test defaultPage
      */
     public function testDefaultPage() {
         ob_start();
@@ -84,20 +158,29 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(true, $results);
     }
 
+    /**
+     * Controller test updateUser
+     */
     public function testUpdateUser() {
         $this->assertEquals(1, 1);
     }
 
+    /**
+     * Controller test createUser
+     */
     public function testCreateUser() {
         $this->assertEquals(1, 1);
     }
 
+    /**
+     * Controller test deleteUser
+     */
     public function testDeleteUser() {
         $this->assertEquals(1, 1);
     }
 
     /**
-     * 
+     * Controller test readUser
      */
     public function testReadUser() {
         $url = '/read/id/0';
@@ -117,7 +200,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Controller test indexUser
      */
     public function testIndexUser() {
         ob_start();
@@ -128,7 +211,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Controller test getID
      */
     public function testGetID() {
         $result = $this->object->getID();
@@ -137,7 +220,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Controller test getParams
      */
     public function testGetParams() {
         $result = $this->object->getParams();
@@ -146,7 +229,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Controller test getQueryParams
      */
     public function testGetQueryParams() {
         $result = $this->object->getQueryParams();
@@ -155,17 +238,19 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * 
+     * Controller test getUser
      */
     public function testGetUser() {
+        // Make sure class returned is the Model class.
         $result = $this->object->getUser();
         $this->assertInstanceOf(Model::class, $result);
     }
 
     /**
-     * 
+     * Controller test getErrors
      */
     public function testGetErrors() {
+        // Add errors and check if they are show up.
         $this->object->getUser()->addError('err1');
         $this->object->getUser()->addError('err2');
         $result = $this->object->getErrors();

@@ -31,6 +31,8 @@ class ViewTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * View test for render
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRender() {
@@ -56,6 +58,8 @@ HTML;
     }
 
     /**
+     * View test for defaultPage
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderDefaultPage() {
@@ -69,6 +73,8 @@ HTML;
     }
 
     /**
+     * View test for routeError
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderRouteError() {
@@ -97,6 +103,8 @@ HTML;
     }
 
     /**
+     * View test for renderRead
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderRead() {
@@ -121,6 +129,8 @@ HTML;
     }
 
     /**
+     * View test for renderIndex
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderIndex() {
@@ -153,6 +163,8 @@ HTML;
     }
 
     /**
+     * View test for renderJson
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderJson() {
@@ -174,6 +186,8 @@ HTML;
     }
 
     /**
+     * View test for renderTemplate
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderTemplate() {
@@ -203,6 +217,8 @@ HTML;
     }
 
     /**
+     * View test for renderErrors
+     * 
      * @TODO Improve test to check for valid HTML or structure.
      */
     public function testRenderErrors() {
