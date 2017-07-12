@@ -69,11 +69,13 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
             // Read the data from the setup
             $result = $this->object->read($this->idList[ $i ]);
+            
             // Check each column
             $this->assertEquals($this->paramList[$i]['e'], $result['email']);
             $this->assertEquals($this->paramList[$i]['fn'], $result['first_name']);
             $this->assertEquals($this->paramList[$i]['ln'], $result['last_name']);
             $this->assertEquals($this->idList[ $i ], $result['id_users']);
+            
             // Verify the password hash.
             $this->assertTrue(password_verify($this->paramList[$i]['p'], $result['passwd']));
         }
