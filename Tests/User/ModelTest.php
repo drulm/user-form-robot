@@ -52,13 +52,83 @@ class ModelTest extends PHPUnit_Framework_TestCase {
             $this->object->delete($this->idList[$i]);
         }
     }
-
-    public function testCreate() {
-        $this->assertEquals(1, 1);
+    
+    protected function addData($prefix = '') {
+        // Populate database with test data, and save IDs generated.
+        $paramList = [];
+        $idList = [];
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            $iStr = strval($i);
+            $paramList[$i] = [
+                'e' => $prefix . 'email' . $iStr . '@' . $prefix . 'Test.dev',
+                'fn' => $prefix . 'first' . $iStr,
+                'ln' => $prefix . 'last' . $iStr,
+                'p' => $prefix . 'password' . $iStr,
+            ];
+            // Save the list of IDs for created users.
+            $idList[$i] = $this->object->create($paramList[$i]);
+        }
+        return ['params' => $paramList, 'ids' => $idList];
+    }
+    
+    protected function removeData($data) {
+        // Delete data from test database.
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            $this->object->delete($data['ids'][$i]);
+        }
+    }
+    
+    protected function validateData($prefix = '', $data) {
+        // Read all entries written to database and compare with original parameters.
+        $paramList = $data['params'];
+        $idList = $data['ids'];
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            // Read the data from the setup
+            $result = $this->object->read($idList[$i]);
+            
+            // Check each column
+            $this->assertEquals($paramList[$i]['e'], $result['email']);
+            $this->assertEquals($paramList[$i]['fn'], $result['first_name']);
+            $this->assertEquals($paramList[$i]['ln'], $result['last_name']);
+            $this->assertEquals($idList[$i], $result['id_users']);
+            
+            // Verify the password hash.
+            $this->assertTrue(password_verify($paramList[$i]['p'], $result['passwd']));
+        }
     }
 
+    /**
+     * 
+     */
+    public function testCreate() {
+        $data = $this->addData('create');
+        $this->validateData('create', $data);
+        $this->removeData($data);
+    }
+
+    /**
+     * 
+     */
     public function testUpdate() {
-        $this->assertEquals(1, 1);
+        // Create test data.
+        $data = $this->addData('update');
+        
+        // Modify the entry, not the email in this test.
+        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            $data['params'][$i]['fn'] = $data['params'][$i]['fn'] . bin2hex(random_bytes(4));
+            $data['params'][$i]['ln'] = $data['params'][$i]['ln'] . bin2hex(random_bytes(4));
+            $data['params'][$i]['p'] = $data['params'][$i]['p'] . bin2hex(random_bytes(4));
+            $data['params'][$i]['id'] = $data['ids'][$i];
+            
+            // Call update with the modded data.
+            $this->object->update($data['params'][$i]);
+        }
+
+        // Test the data.
+        $this->validateData('update', $data);
+        
+        // Remove the test data.
+        $this->removeData($data);
     }
 
     /**

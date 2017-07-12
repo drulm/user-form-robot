@@ -123,7 +123,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $results = $this->object->indexUser();
         $text = ob_get_clean();
-        //$this->assertInternalType('array', $results);
+        $this->assertInternalType('array', $results);
         $this->assertInternalType('string', $text);
     }
 
