@@ -25,21 +25,6 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      */
     protected function setUp() {
         $this->object = new Model;
-
-        // Populate database with test data, and save IDs generated.
-        $this->paramList = [];
-        $this->idList = [];
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            $iStr = strval($i);
-            $this->paramList[$i] = [
-                'e' => 'email' . $iStr . '@test.dev',
-                'fn' => 'first' . $iStr,
-                'ln' => 'last' . $iStr,
-                'p' => 'password' . $iStr,
-            ];
-            // Save the list of IDs for created users.
-            $this->idList[$i] = $this->object->create($this->paramList[$i]);
-        }
     }
 
     /**
@@ -47,10 +32,6 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        // Delete data from test database.
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            $this->object->delete($this->idList[$i]);
-        }
     }
     
     protected function addData($prefix = '') {
@@ -82,18 +63,24 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         // Read all entries written to database and compare with original parameters.
         $paramList = $data['params'];
         $idList = $data['ids'];
+
         for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
             // Read the data from the setup
             $result = $this->object->read($idList[$i]);
             
-            // Check each column
-            $this->assertEquals($paramList[$i]['e'], $result['email']);
-            $this->assertEquals($paramList[$i]['fn'], $result['first_name']);
-            $this->assertEquals($paramList[$i]['ln'], $result['last_name']);
-            $this->assertEquals($idList[$i], $result['id_users']);
-            
-            // Verify the password hash.
-            $this->assertTrue(password_verify($paramList[$i]['p'], $result['passwd']));
+            // For delete, should not be able to read the data, returns a false.
+            if ($prefix == 'delete') {
+                $this->assertFalse($result);
+            }
+            else {
+                // Check each column for other cases of validation
+                $this->assertEquals($paramList[$i]['e'], $result['email']);
+                $this->assertEquals($paramList[$i]['fn'], $result['first_name']);
+                $this->assertEquals($paramList[$i]['ln'], $result['last_name']);
+                $this->assertEquals($idList[$i], $result['id_users']);
+                // Verify the password hash.
+                $this->assertTrue(password_verify($paramList[$i]['p'], $result['passwd']));
+            }
         }
     }
 
@@ -115,10 +102,10 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         
         // Modify the entry, not the email in this test.
         for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+            $data['params'][$i]['id'] = $data['ids'][$i];
             $data['params'][$i]['fn'] = $data['params'][$i]['fn'] . bin2hex(random_bytes(4));
             $data['params'][$i]['ln'] = $data['params'][$i]['ln'] . bin2hex(random_bytes(4));
             $data['params'][$i]['p'] = $data['params'][$i]['p'] . bin2hex(random_bytes(4));
-            $data['params'][$i]['id'] = $data['ids'][$i];
             
             // Call update with the modded data.
             $this->object->update($data['params'][$i]);
@@ -135,30 +122,31 @@ class ModelTest extends PHPUnit_Framework_TestCase {
      * 
      */
     public function testRead() {
-        // Read all entries written to database and compare with original parameters.
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            // Read the data from the setup
-            $result = $this->object->read($this->idList[ $i ]);
-            
-            // Check each column
-            $this->assertEquals($this->paramList[$i]['e'], $result['email']);
-            $this->assertEquals($this->paramList[$i]['fn'], $result['first_name']);
-            $this->assertEquals($this->paramList[$i]['ln'], $result['last_name']);
-            $this->assertEquals($this->idList[ $i ], $result['id_users']);
-            
-            // Verify the password hash.
-            $this->assertTrue(password_verify($this->paramList[$i]['p'], $result['passwd']));
-        }
+        $data = $this->addData('read');
+        $this->validateData('read', $data);
+        $this->removeData($data);
     }
 
+    /**
+     * 
+     */
     public function testDelete() {
-        $this->assertEquals(1, 1);
+        // Here we add data, then remove it first and validate that all have been removed.
+        $data = $this->addData('delete');
+        $this->removeData($data);
+        $this->validateData('delete', $data);
     }
 
+    /**
+     * 
+     */
     public function testGetErrors() {
         $this->assertEquals(1, 1);
     }
 
+    /**
+     * 
+     */
     public function testAddError() {
         $this->assertEquals(1, 1);
     }
