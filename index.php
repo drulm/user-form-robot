@@ -26,10 +26,3 @@ $url = $_SERVER["REQUEST_URI"];
 
 // Direct the route given the url information.
 $results = $controller->directRoute($url);
-
-/*echo '<pre>';
-echo "Errors: "; var_dump($controller->getErrors());
-echo '</pre>';
- * 
- */
-

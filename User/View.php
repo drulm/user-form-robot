@@ -76,14 +76,14 @@ $markup = <<<HTML
 <h2>Default Page</h2>
 <h3>Command Examples:</h3>
 <ul>
-<li>CREATE: /create/e/ignacy@portal.dev/fn/Ignacy/ln/Trzewiczek/p/PortalGames</li>
-<li>CREATE: /index.php?command=create&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames</li>
+<li>CREATE: /create/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames</li>
+<li>CREATE: /index.php?command=create&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames</li>
 <li>READ: read/id/100</li>
 <li>READ: index.php?command=read&id=100</li>
 <li>READ json output: /read/id/6/type/json</li>
 <li>READ json output: /index.php?command=read&id=6&type=json</li>
-<li>UPDATE: /update/e/ignacy@portal.dev/fn/Ignacy/ln/Trzewiczek/p/PortalGames/id/100</li>
-<li>UPDATE: /index.php?command=update&e=ignacy@portal.dev&fn=Ignacy&ln=Trzewiczek&p=PortalGames&id=100</li>
+<li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/100</li>
+<li>UPDATE: /index.php?command=update&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=100</li>
 <li>DELETE: /delete/id/100</li>
 <li>DELETE: /index.php?command=delete&id=100</li>
 <li>INDEX (list all): /index</li>

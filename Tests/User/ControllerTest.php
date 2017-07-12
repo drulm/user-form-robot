@@ -24,7 +24,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
     protected $routes;
     
     /**
-     * @var Array of routes 
+     * @var Array of routeParameters
      */
     protected $routesParams;
     
@@ -111,7 +111,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
             $this->assertEquals($params, $expected);
             $this->assertEquals($query, $expected['query']);
             $this->assertInternalType('boolean', $results);
-            //$this->assertEquals(true, $results);
         }
     }
 
@@ -119,19 +118,28 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
      * Controller test directRoute
      */
     public function testDirectRoute() {
-        $url = '/read/id/0';
-        ob_start();
-        $results = $this->object->directRoute($url);
-        $text = ob_get_clean();
-        $params = $this->object->getParams();
-        $id = $this->object->getID();
-        $query = $this->object->getQueryParams();
-        $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '0']]);
-        $this->assertEquals($id, 0);
-        $this->assertEquals($query, ['id' => '0']);
-        $this->assertInternalType('string', $text);
-        $this->assertInternalType('boolean', $results);
-        $this->assertEquals(false, $results);
+         // Test all routes and expected outputs.
+        for ($i = 0; $i < count($this->routes); $i++) {
+            $expected = $this->routesParams[$i];
+            
+            // Get URL (path).
+            $url = $this->routes[$i];
+            
+            // Collect output when routes are tested.
+            ob_start();
+            $results = $this->object->directRoute($url);
+            $text = ob_get_clean();
+            
+            // Segment route into params and/or id.
+            $params = $this->object->getParams();
+            $id = $this->object->getID();
+            $query = $this->object->getQueryParams();
+            
+            // Check results
+            $this->assertEquals($params, $expected);
+            $this->assertEquals($query, $expected['query']);
+            $this->assertInternalType('string', $text);
+        }
     }
 
     /**
@@ -160,37 +168,113 @@ class ControllerTest extends PHPUnit_Framework_TestCase {
 
     /**
      * Controller test updateUser
+     * 
+     * @TODO improve this test
      */
     public function testUpdateUser() {
-        $this->assertEquals(1, 1);
+        // Set up a read route.
+        $url = '/update/e/e@test.dev/fn/first1/ln/last1/p/password1/id/6';
+        $results = $this->object->analyseRoute($url);
+        
+        // Separaate the parameters
+        $params = $this->object->getParams();
+        $query = $this->object->getQueryParams();
+        
+        // Udpdate a user, and capture output.
+        ob_start();
+        $createdId = $this->object->createUser($params);
+        $text = ob_get_clean();
+
+        // Check the results
+        $this->assertEquals($params, ['command' => 'update', 'query' => 
+                ['e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1', 'id' => '6']]);
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(true, $results);
     }
 
     /**
      * Controller test createUser
+     * 
+     * @TODO Improve this test.
      */
     public function testCreateUser() {
-        $this->assertEquals(1, 1);
+        // Set up a read route.
+        $url = '/create/e/e@test.dev/fn/first1/ln/last1/p/password1';
+        $results = $this->object->analyseRoute($url);
+        
+        // Separaate the parameters
+        $params = $this->object->getParams();
+        $query = $this->object->getQueryParams();
+        
+        // Create the user, and capture output.
+        ob_start();
+        $createdId = $this->object->createUser($params);
+        $text = ob_get_clean();
+
+        // Check the results
+        $this->assertEquals($params, ['command' => 'create', 'query' => 
+                ['e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1']]);
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(true, $results);
+        
+        // Delete the created user.
+        ob_start();
+        $this->object->deleteUser($createdId);
+        $text = ob_get_clean();
     }
 
     /**
      * Controller test deleteUser
+     * 
+     * @TODO improve testing for deleteUser
      */
     public function testDeleteUser() {
-        $this->assertEquals(1, 1);
+        // Set up a read route.
+        $url = '/delete/id/0';
+        $results = $this->object->analyseRoute($url);
+        
+        // Delete the user, and capture output.
+        ob_start();
+        $results = $this->object->deleteUser(0);
+        $text = ob_get_clean();
+
+        // Separaate the parameters
+        $params = $this->object->getParams();
+        $id = $this->object->getID();
+        $query = $this->object->getQueryParams();
+
+        // Check the results
+        $this->assertEquals($params, ['command' => 'delete', 'query' => ['id' => '0']]);
+        $this->assertEquals($id, 0);
+        $this->assertEquals($query, ['id' => '0']);
+        $this->assertInternalType('string', $text);
+        $this->assertInternalType('boolean', $results);
+        $this->assertEquals(false, $results);
     }
 
     /**
      * Controller test readUser
+     * 
+     * @TODO make better tests for readUser.
      */
     public function testReadUser() {
+        // Set up a read route.
         $url = '/read/id/0';
         $results = $this->object->analyseRoute($url);
+        
+        // Read the user, and capture output.
         ob_start();
         $results = $this->object->readUser();
         $text = ob_get_clean();
+
+        // Separaate the parameters
         $params = $this->object->getParams();
         $id = $this->object->getID();
         $query = $this->object->getQueryParams();
+
+        // Check the results
         $this->assertEquals($params, ['command' => 'read', 'query' => ['id' => '0']]);
         $this->assertEquals($id, 0);
         $this->assertEquals($query, ['id' => '0']);
