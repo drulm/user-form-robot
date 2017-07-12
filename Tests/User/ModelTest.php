@@ -34,6 +34,12 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     protected function tearDown() {
     }
     
+    /**
+     * Add data to database -- create
+     * 
+     * @param string $prefix       // Prefix of data to add     
+     * @return type
+     */
     protected function addData($prefix = '') {
         // Populate database with test data, and save IDs generated.
         $paramList = [];
@@ -59,7 +65,14 @@ class ModelTest extends PHPUnit_Framework_TestCase {
         }
     }
     
-    protected function validateData($prefix = '', $data) {
+    /**
+     * Validate data -- read
+     * 
+     * @param string $prefix        // Prefix of data to check
+     * @param type $data            // Data and id arrays to validate
+     * @param type $testEmpty       // true if user at id should not be found
+     */
+    protected function validateData($prefix = '', $data, $testEmpty = false) {
         // Read all entries written to database and compare with original parameters.
         $paramList = $data['params'];
         $idList = $data['ids'];
@@ -68,8 +81,8 @@ class ModelTest extends PHPUnit_Framework_TestCase {
             // Read the data from the setup
             $result = $this->object->read($idList[$i]);
             
-            // For delete, should not be able to read the data, returns a false.
-            if ($prefix == 'delete') {
+            // For delete, and testing if empty.
+            if ($testEmpty) {
                 $this->assertFalse($result);
             }
             else {
@@ -85,7 +98,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Model test create.
      */
     public function testCreate() {
         $data = $this->addData('create');
@@ -94,7 +107,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Model test update.
      */
     public function testUpdate() {
         // Create test data.
@@ -119,36 +132,49 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * 
+     * Model test read.
      */
     public function testRead() {
+        // Add data, read it, check results, remove.
         $data = $this->addData('read');
         $this->validateData('read', $data);
         $this->removeData($data);
+        // Make sure reading empty data works.
+        $this->validateData('read', $data, true);
     }
 
     /**
-     * 
+     * Model test delete.
      */
     public function testDelete() {
-        // Here we add data, then remove it first and validate that all have been removed.
+        // Add data.
         $data = $this->addData('delete');
+        // Remove the data.
         $this->removeData($data);
-        $this->validateData('delete', $data);
+        // Make sure data was removed. True parameter checks for not found.
+        $this->validateData('delete', $data, true);
     }
 
     /**
-     * 
+     * Model test for getErrors
      */
     public function testGetErrors() {
-        $this->assertEquals(1, 1);
+        $this->object->addError('DBerr1');
+        $this->object->addError('DBerr2');
+        $result = $this->object->getErrors();
+        $expected = [0 => 'DBerr1', 1 => 'DBerr2'];
+        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
     }
 
     /**
-     * 
+     * Model test for addErrors
      */
     public function testAddError() {
-        $this->assertEquals(1, 1);
+        $this->object->addError('DBerr3');
+        $this->object->addError('DBerr4');
+        $result = $this->object->getErrors();
+        $expected = [0 => 'DBerr3', 1 => 'DBerr4'];
+        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
     }
 
 }
