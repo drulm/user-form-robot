@@ -4,6 +4,12 @@
 
 ## Darrell Raymond Ulm
 
+### Main Code is in User directory
+### Front controller is index.php
+### Driector params/Confuration has the config setting for database and more
+### Tests directory has PHPUnit tests
+### setup directory has MySQL schema
+
 ## How to use
 - Works with two types of URI parameters as defined in https://tools.ietf.org/html/rfc6570 either as:
 -- index.php?command=command_type&param1=value1&param2=value2&...
