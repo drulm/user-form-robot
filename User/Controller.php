@@ -100,11 +100,11 @@ class Controller {
 		if (Configuration::DEBUG) {
 			echo '<pre>path: ';
 			var_dump($path);
-						echo 'path_elements: ';
+			echo 'path_elements: ';
 			var_dump($path_elements);
-						echo 'query: ';
+			echo 'query: ';
 			var_dump($query);
-						echo 'command: ';
+			echo 'command: ';
 			var_dump($command);
 			echo '</pre>';
 		}
