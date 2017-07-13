@@ -1,7 +1,11 @@
 <?php
+/**
+ * Composer
+ */
+require_once(dirname(__FILE__) . '/../../vendor/autoload.php');
 
-require_once(dirname(__FILE__) . '/../../params/Configuration.php');
-require_once(dirname(__FILE__) . '/../../User/Model.php');
+use User\Model;
+use params\Configuration;
 
 // @TODO namespace
 

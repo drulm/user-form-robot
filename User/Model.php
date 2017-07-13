@@ -1,11 +1,4 @@
 <?php
-
-//require_once '../params/Configuration.php';
-//require_once 'params/Configuration.php';
-require_once(dirname(__FILE__) . '/../params/Configuration.php');
-
-//use \PDO;
-
 /**
  *
  * User model
@@ -25,6 +18,12 @@ require_once(dirname(__FILE__) . '/../params/Configuration.php');
  * Reference on URI paths: https://tools.ietf.org/html/rfc6570
  * 
  */
+namespace User;
+
+use PDO;
+use params\Configuration;
+
+
 class Model
 {
     
@@ -78,14 +77,12 @@ class Model
 
                 try {
                     $results = $stmt->execute(); 
-                    
                     // Return the index ID if valid.
                     if ($results) {
                         $id = $db->lastInsertId();
                         $results = $id;
                     }
-         
-                } catch (PDOException $e) {
+                } catch (\PDOexception $e) {
                     $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                     return false;
                 }
@@ -155,7 +152,7 @@ class Model
 
                 try {
                     $results = $stmt->execute();
-                } catch (PDOException $e) {
+                } catch (\PDOexception $e) {
                     $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                     return false;
                 }
@@ -202,7 +199,7 @@ class Model
 
             try {
                 $results = $stmt->execute();
-            } catch (PDOException $e) {
+            } catch (\PDOexception $e) {
                 $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
             }
@@ -248,7 +245,7 @@ class Model
                 $stmt->bindValue(':id_users', $id, PDO::PARAM_INT);
                 try {
                     $results = $stmt->execute();
-                } catch (PDOException $e) {
+                } catch (\PDOexception $e) {
                     $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                     return false;
                 }
@@ -282,11 +279,11 @@ class Model
                 'mysql:host=' . Configuration::DB_HOST .
                 ';dbname=' . Configuration::DB_SCHEMA .
                 ';port=' . Configuration::DB_MYSQL_PORT . 
-                ';charset=utf8';
+                ';charset=utf8';        
             try {
                 $db = new PDO($dsn, Configuration::DB_USER, Configuration::DB_PASSWORD);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
+            } catch (\PDOexception $e) {
                 return $e->getMessage();
             }
         }

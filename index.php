@@ -5,11 +5,16 @@
  * PHP version 7.0
  */
 
-// @TODO Clean up.
-require_once 'params/Configuration.php';
-require_once 'User/Controller.php';
+/**
+ * Composer
+ */
+require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
-if (Configuration::DEBUG) {
+use params\Configuration;
+use User\Controller;
+
+
+if (DEBUG) {
     error_reporting(E_ALL);
     ini_set('display_errors', TRUE);
     ini_set('display_startup_errors', TRUE);

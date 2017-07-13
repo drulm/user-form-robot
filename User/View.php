@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * User view
@@ -8,6 +7,11 @@
  * 
  * @TODO namespace
  */
+namespace User;
+
+use params\Configuration;
+
+
 class View
 {
    
@@ -58,7 +62,7 @@ class View
                 break;
         }
         
-        $errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
+        $errorMarkup = \params\Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
         
         $this->renderTemplate($html, $errorMarkup);
     }

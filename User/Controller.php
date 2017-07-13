@@ -1,12 +1,4 @@
 <?php
-
-//require_once 'Model.php';
-//require_once 'View.php';
-require_once(dirname(__FILE__) . '/Model.php');
-require_once(dirname(__FILE__) . '/View.php');
-
-//namespace User;
-
 /**
  *
  * User controller
@@ -16,6 +8,13 @@ require_once(dirname(__FILE__) . '/View.php');
  * @TODO namespace
  *
  */
+namespace User;
+
+use params\Configuration;
+use User\Model;
+use User\View;
+
+
 Class Controller
 {
     
@@ -104,7 +103,7 @@ Class Controller
         // Controller parameters are the command and the query elements.
         $this->parameters = ['command' => $command, 'query' => $query];
         
-        if (Configuration::DEBUG) {
+        if (\params\Configuration::DEBUG) {
             echo "<pre>path: "; var_dump($path);
             echo "path_elements: "; var_dump($path_elements);
             echo "query: "; var_dump($query);
@@ -114,7 +113,7 @@ Class Controller
         // Return the validity of the route.
         $validRoute = strlen($command) > 0 || ($command == '' && empty($query));
         if (!$validRoute) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route. Check path and parameters.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Not a valid route. Check path and parameters.");
         }
         return $validRoute;
     }
@@ -157,17 +156,17 @@ Class Controller
                     $results = $this->defaultPage();
                     break;
                 default:
-                    $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid command.");
+                    $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Not a valid command.");
                     $results = $this->routeError();
             }
         }
         else {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Not a valid route.");
             $results = $this->routeError();
         }
 
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Not a valid route.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Not a valid route.");
         }
         return $results;
     }
@@ -179,7 +178,7 @@ Class Controller
      */
     public function routeError()
     {
-        if (Configuration::DEBUG) {
+        if (\params\Configuration::DEBUG) {
             echo "<pre>routeError Params: "; var_dump($this->getParams()); echo '</pre>';
         }
         $this->view->render($this->getParams(), 'routeError', $this->getErrors());
@@ -210,7 +209,7 @@ Class Controller
             $results = $this->user->update($params);
         }
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not update, check parameters.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not update, check parameters.");
         }
         $this->view->render(['update' => $results], 'otherAction', $this->getErrors());
         return $results;
@@ -229,7 +228,7 @@ Class Controller
             $results = $this->user->create($params);
         }
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not create new user, check parameters.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not create new user, check parameters.");
         }
         $this->view->render(['create' => $results], 'otherAction', $this->getErrors());
         
@@ -249,7 +248,7 @@ Class Controller
             $results = $this->user->delete($id);
         }
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "User could not be deleted. Check ID.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "User could not be deleted. Check ID.");
         }
         $this->view->render(['delete' => $results], 'otherAction', $this->getErrors());
         return $results;
@@ -267,11 +266,11 @@ Class Controller
         if ($id) {
             $results = $this->user->read($id);
             if (!$results) {
-                $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, check id.");
+                $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not read user from database, check id.");
             }
         }
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not read user from database, Id not valid or missing.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not read user from database, Id not valid or missing.");
         }
 
         $query = $this->getQueryParams();
@@ -293,7 +292,7 @@ Class Controller
     {
         $results = $this->user->read();
         if (!$results) {
-            $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not index (read all) users from database.");
+            $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not index (read all) users from database.");
         }
         
         $query = $this->getQueryParams();
@@ -317,7 +316,7 @@ Class Controller
         if (isset($params['id']) && is_numeric($params['id'])) {
             return $params['id'];
         }
-        $this->user->addError(Configuration::CONT_ERROR_MSG . "Could not find valid ID.");
+        $this->user->addError(\params\Configuration::CONT_ERROR_MSG . "Could not find valid ID.");
         return false;
     }
     
