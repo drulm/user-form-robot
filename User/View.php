@@ -175,10 +175,8 @@ HTML;
 	 * @return string               HTML generated.
 	 */
 	public function renderOtherAction($data) {
-		$value = reset($data);
+		$outcome = reset($data);
 		$action = key($data);
-
-		$outcome = $value ? 'true' : 'false';
 		
 		if ($data['json']) {
 			$jsonOutput = ['result' => [$action => $outcome]];
