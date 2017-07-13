@@ -2,10 +2,10 @@
 /**
  * Composer
  */
-require_once(dirname(__FILE__) . '/../../vendor/autoload.php');
+require_once dirname(__FILE__) . '/../../vendor/autoload.php';
 
-use User\Model;
 use params\Configuration;
+use User\Model;
 
 // @TODO namespace
 
@@ -14,178 +14,207 @@ use params\Configuration;
  */
 class ModelTest extends PHPUnit_Framework_TestCase {
 
-    /**
-     * @var Model
-     */
-    protected $object;
-    
-    protected $paramList;
-    
-    protected $idList;
+	/**
+	 * @var \User\Model
+	 */
+	protected $object;
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp() {
-        $this->object = new Model;
-    }
+	/**
+	 * @var \User\Model\array
+	 */
+	protected $paramList;
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown() {
-    }
-    
-    /**
-     * Add data to database -- uses create
-     * 
-     * @param string $prefix       // Prefix of data to add     
-     * @return type
-     */
-    protected function addData($prefix = '') {
-        // Populate database with test data, and save IDs generated.
-        $paramList = [];
-        $idList = [];
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            $iStr = strval($i);
-            $paramList[$i] = [
-                'e' => $prefix . 'email' . $iStr . '@' . $prefix . 'Test.dev',
-                'fn' => $prefix . 'first' . $iStr,
-                'ln' => $prefix . 'last' . $iStr,
-                'p' => $prefix . 'password' . $iStr,
-            ];
-            // Save the list of IDs for created users.
-            $idList[$i] = $this->object->create($paramList[$i]);
-        }
-        return ['params' => $paramList, 'ids' => $idList];
-    }
-    
-    protected function removeData($data) {
-        // Delete data from test database.
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            $this->object->delete($data['ids'][$i]);
-        }
-    }
-    
-    /**
-     * Validate data -- uses read
-     * 
-     * @param string $prefix        // Prefix of data to check
-     * @param type $data            // Data and id arrays to validate
-     * @param type $testEmpty       // true if user at id should not be found
-     */
-    protected function validateData($prefix = '', $data, $testEmpty = false) {
-        // Read all entries written to database and compare with original parameters.
-        $paramList = $data['params'];
-        $idList = $data['ids'];
+	/**
+	 * @var \User\Model\array
+	 */
+	protected $idList;
 
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            // Read the data from the setup
-            $result = $this->object->read($idList[$i]);
-            
-            // For delete, and testing if empty.
-            if ($testEmpty) {
-                $this->assertFalse($result);
-            }
-            else {
-                // Check each column for other cases of validation
-                $this->assertEquals($paramList[$i]['e'], $result['email']);
-                $this->assertEquals($paramList[$i]['fn'], $result['first_name']);
-                $this->assertEquals($paramList[$i]['ln'], $result['last_name']);
-                $this->assertEquals($idList[$i], $result['id_users']);
-                // Verify the password hash.
-                $this->assertTrue(password_verify($paramList[$i]['p'], $result['passwd']));
-            }
-        }
-    }
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function setUp() {
+		$this->object = new Model();
+	}
 
-    /**
-     * Model test create.
-     */
-    public function testCreate() {
-        $data = $this->addData('create');
-        $this->validateData('create', $data);
-        $this->removeData($data);
-    }
+	/**
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
+	 *
+	 * @return void
+	 */
+	protected function tearDown() {
+	}
 
-    /**
-     * Model test update.
-     */
-    public function testUpdate() {
-        // Create test data.
-        $data = $this->addData('update');
-        
-        // Modify the entry, not the email in this test.
-        for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
-            $data['params'][$i]['id'] = $data['ids'][$i];
-            $data['params'][$i]['fn'] = $data['params'][$i]['fn'] . bin2hex(random_bytes(4));
-            $data['params'][$i]['ln'] = $data['params'][$i]['ln'] . bin2hex(random_bytes(4));
-            $data['params'][$i]['p'] = $data['params'][$i]['p'] . bin2hex(random_bytes(4));
-            
-            // Call update with the modded data.
-            $this->object->update($data['params'][$i]);
-        }
+	/**
+	 * Add data to database -- uses create
+	 *
+	 * @param string $prefix				// Prefix of data to add
+	 * @return array
+	 */
+	protected function addData($prefix = '') {
+		// Populate database with test data, and save IDs generated.
+		$paramList = [];
+		$idList = [];
+		for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+			$iStr = (string)$i;
+			$paramList[$i] = [
+				'e' => $prefix . 'email' . $iStr . '@' . $prefix . 'Test.dev',
+				'fn' => $prefix . 'first' . $iStr,
+				'ln' => $prefix . 'last' . $iStr,
+				'p' => $prefix . 'password' . $iStr,
+			];
+			// Save the list of IDs for created users.
+			$idList[$i] = $this->object->create($paramList[$i]);
+		}
+		return ['params' => $paramList, 'ids' => $idList];
+	}
 
-        // Test the data.
-        $this->validateData('update', $data);
-        
-        // Remove the test data.
-        $this->removeData($data);
-    }
+	protected function removeData($data) {
+		// Delete data from test database.
+		for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+			$this->object->delete($data['ids'][$i]);
+		}
+	}
 
-    /**
-     * Model test read.
-     */
-    public function testRead() {
-        // Add data, read it, check results, remove.
-        $data = $this->addData('read');
-        $this->validateData('read', $data);
-        $this->removeData($data);
+	/**
+	 * Validate data -- uses read
+	 *
+	 * @param string $prefix					// Prefix of data to check
+	 * @param array $data					// Data and id arrays to validate
+	 * @param bool $testEmpty				// true if user at id should not be found
+	 * @return void
+	 */
+	protected function validateData($prefix = '', $data, $testEmpty = false) {
+		// Read all entries written to database and compare with original parameters.
+		$paramList = $data['params'];
+		$idList = $data['ids'];
 
-        // Make sure reading empty data works.
-        $this->validateData('read', $data, true);
-    }
+		for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+			// Read the data from the setup
+			$result = $this->object->read($idList[$i]);
 
-    /**
-     * Model test delete.
-     */
-    public function testDelete() {
-        // Add data.
-        $data = $this->addData('delete');
-        // Remove the data.
-        $this->removeData($data);
-        // Make sure data was removed. True parameter checks for not found.
-        $this->validateData('delete', $data, true);
-    }
+			// For delete, and testing if empty.
+			if ($testEmpty) {
+				$this->assertFalse($result);
+			}
+			else {
+				// Check each column for other cases of validation
+				$this->assertEquals($paramList[$i]['e'], $result['email']);
+				$this->assertEquals($paramList[$i]['fn'], $result['first_name']);
+				$this->assertEquals($paramList[$i]['ln'], $result['last_name']);
+				$this->assertEquals($idList[$i], $result['id_users']);
+				// Verify the password hash.
+				$this->assertTrue(password_verify($paramList[$i]['p'], $result['passwd']));
+			}
+		}
+	}
 
-    /**
-     * Model test for getErrors
-     */
-    public function testGetErrors() {
-        // Try get errors with nothing added to error array.
-        $result = $this->object->getErrors();
-        $expected = [];
-        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
-        
-        // Add some errors, and then check if Get is working.s
-        $this->object->addError('DBerr1');
-        $this->object->addError('DBerr2');
-        $result = $this->object->getErrors();
-        $expected = [0 => 'DBerr1', 1 => 'DBerr2'];
-        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
-    }
+	/**
+	 * Model test create.
+	 *
+	 * @return void
+	 */
+	public function testCreate() {
+		$data = $this->addData('create');
+		$this->validateData('create', $data);
+		$this->removeData($data);
+	}
 
-    /**
-     * Model test for addErrors
-     */
-    public function testAddError() {
-        $this->object->addError('DBerr3');
-        $this->object->addError('DBerr4');
-        $result = $this->object->getErrors();
-        $expected = [0 => 'DBerr3', 1 => 'DBerr4'];
-        $this->assertEquals($expected, $result, "\$canonicalize = true", $delta = 0.0, $maxDepth = 10, $canonicalize = true);
-    }
+	/**
+	 * Model test update.
+	 *
+	 * @return void
+	 */
+	public function testUpdate() {
+		// Create test data.
+		$data = $this->addData('update');
+
+		// Modify the entry, not the email in this test.
+		for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
+			$data['params'][$i]['id'] = $data['ids'][$i];
+			$data['params'][$i]['fn'] = $data['params'][$i]['fn'] . bin2hex(random_bytes(4));
+			$data['params'][$i]['ln'] = $data['params'][$i]['ln'] . bin2hex(random_bytes(4));
+			$data['params'][$i]['p'] = $data['params'][$i]['p'] . bin2hex(random_bytes(4));
+
+			// Call update with the modded data.
+			$this->object->update($data['params'][$i]);
+		}
+
+		// Test the data.
+		$this->validateData('update', $data);
+
+		// Remove the test data.
+		$this->removeData($data);
+	}
+
+	/**
+	 * Model test read.
+	 *
+	 * @return void
+	 */
+	public function testRead() {
+		// Add data, read it, check results, remove.
+		$data = $this->addData('read');
+		$this->validateData('read', $data);
+		$this->removeData($data);
+
+		// Make sure reading empty data works.
+		$this->validateData('read', $data, true);
+	}
+
+	/**
+	 * Model test delete.
+	 *
+	 * @return void
+	 */
+	public function testDelete() {
+		// Add data.
+		$data = $this->addData('delete');
+		// Remove the data.
+		$this->removeData($data);
+		// Make sure data was removed. True parameter checks for not found.
+		$this->validateData('delete', $data, true);
+	}
+
+	/**
+	 * Model test for getErrors
+	 *
+	 * @return void
+	 */
+	public function testGetErrors() {
+		// Try get errors with nothing added to error array.
+		$result = $this->object->getErrors();
+		$expected = [];
+		$delta = 0.0;
+		$maxDepth = 10;
+		$canonicalize = true;
+		$this->assertEquals($expected, $result, '$canonicalize = true', $delta, $maxDepth, $canonicalize);
+
+		// Add some errors, and then check if Get is working.s
+		$this->object->addError('DBerr1');
+		$this->object->addError('DBerr2');
+		$result = $this->object->getErrors();
+		$expected = [0 => 'DBerr1', 1 => 'DBerr2'];
+		$this->assertEquals($expected, $result, '$canonicalize = true', $delta, $maxDepth, $canonicalize);
+	}
+
+	/**
+	 * Model test for addErrors
+	 *
+	 * @return void
+	 */
+	public function testAddError() {
+		$this->object->addError('DBerr3');
+		$this->object->addError('DBerr4');
+		$result = $this->object->getErrors();
+		$expected = [0 => 'DBerr3', 1 => 'DBerr4'];
+		$delta = 0.0;
+		$maxDepth = 10;
+		$canonicalize = true;
+		$this->assertEquals($expected, $result, '$canonicalize = true', $delta, $maxDepth, $canonicalize);
+	}
 
 }
