@@ -61,10 +61,10 @@ Example json output for successful create:
 ## Create
 Creates a new user, as long as the email is not already represented in the current database. All four fields are required, email, first_name, last_name, password.
 
-### Path parameter example with HTML output
+### Path parameter example with HTML output showing created ID if create worked
 * CREATE:  http://192.168.59.76/create/e/Albert@math.dev/fn/Albert/ln/Brudzewski/p/Maths
 
-### Query parameter example with HTML output
+### Query parameter example with HTML output showing created ID if create worked
 * CREATE: http://192.168.59.76/index.php?command=create&e=Albert@math.dev&fn=Albert&ln=Brudzewski&p=Maths
 
 ### Path example with json output, returning in JSON success bool and what the new unique ID primary key
@@ -165,7 +165,7 @@ Example json Output:
 [ { "id_users": "7", "email": "Albert888@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$E60R9G2MOFi6nQo0Px9LfuJPJPJeLfQvkTl3\/JZr2bGRAOQehBXgu" }, { "id_users": "98", "email": "ignacy8@prtl.dev", "first_name": "Ignacy", "last_name": "T.", "passwd": "$2y$10$8fzD6qfUPq7zCUdPiFs0y.byUfJKxDqmWwLX.xQ1CafUMW8QKsg1i" }, { "id_users": "237", "email": "ignacy@prtl.dev", "first_name": "Ignacy", "last_name": "T.", "passwd": "$2y$10$eiqKVGP.dGWhg4rg4Ffc3eZv403jrd64.yvfiKEMleSFprZEpiAxe" }, { "id_users": "239", "email": "Albert@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$lSHogNjgma66yLEbK4KU5eXjVsXrKfMgXpIYyL.QytGJ6D6pLFvq." }, { "id_users": "244", "email": "Albert3@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$qeZqAszz6.aLLqr0vDzAdutMUm0hqAiaOSduZUpQemqHMtOOan6YS" }, { "id_users": "246", "email": "Albert5@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$0orPEMl234rXFs3dJ.Y4yOR.TEiMdPsBmDYhS5nZLGacVmzoNhXqe" }, { "id_users": "248", "email": "Albert6@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$XrgJ18RIerWfu.ND8fP3TehtiFJ4y.1kMERAlIktKn\/xNz9jlLNWm" }, { "id_users": "251", "email": "email9.dev", "first_name": "first1", "last_name": "last1", "passwd": "$2y$10$N5GDBE13FSpmv0z8WNn4Iubod0KIflKd5qzlntpaINu.LesVcON3a" }, { "id_users": "297", "email": "Albert99@math.dev", "first_name": "Albert", "last_name": "Brudzewski", "passwd": "$2y$10$vWN.k09mYwW4PpG0oi8lyOHtSIvLvNdB6XZKQbP7ldxVnGE1w\/TnO" } ]
 ```
 
-### Path parameter example with HTML output showing if the command worked
+### Path parameter example with HTML output
 * INDEX (list all): http://192.168.59.76/index
 
 ### Query parameter example with HTML output
@@ -179,6 +179,16 @@ Example json Output:
 
 
 ## Default
+The default page with instructions for use.
+
+### Just host
+* DEFAULT PAGE http://192.168.59.76 HOST: example: http://192.168.59.76
+
+### or at index,php
+* DEFAULT PAGE / HOST: example: http://192.168.59.76/index.php
+
+
+# PHPUnit Tests
 
 ## To Run PHPUnit tests
 - cd /vagrant/Tests
