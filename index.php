@@ -11,8 +11,9 @@
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use User\Controller;
+use params\Configuration;
 
-if (DEBUG) {
+if (\params\Configuration::DEBUG) {
 	error_reporting(E_ALL);
 	ini_set('display_errors', true);
 	ini_set('display_startup_errors', true);

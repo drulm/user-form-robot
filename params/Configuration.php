@@ -13,22 +13,22 @@ class Configuration
      * Hostname or IP
      * @var string
      */
-    //const DB_HOST = '192.168.59.76';
-    const DB_HOST = '127.0.0.1';
+    const DB_HOST = '192.168.59.76';
+    //const DB_HOST = '127.0.0.1';
     
     /**
      * DB Username
      * @var string
      */
-    //const DB_USER = 'my_app';
-    const DB_USER = 'grace';
+    const DB_USER = 'my_app';
+    //const DB_USER = 'grace';
 
     /**
      * DB Password
      * @var string
      */
-    //const DB_PASSWORD = 'secret';
-    const DB_PASSWORD = 'grace';
+    const DB_PASSWORD = 'secret';
+    //const DB_PASSWORD = 'grace';
 
     /**
      * SQL(MySQL) port
