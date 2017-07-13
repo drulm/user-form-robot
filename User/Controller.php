@@ -99,14 +99,14 @@ class Controller {
 
 		if (Configuration::DEBUG) {
 			echo '<pre>path: ';
-var_dump($path);
-			echo 'path_elements: ';
-var_dump($path_elements);
-			echo 'query: ';
-var_dump($query);
-			echo 'command: ';
-var_dump($command);
-echo '</pre>';
+			var_dump($path);
+						echo 'path_elements: ';
+			var_dump($path_elements);
+						echo 'query: ';
+			var_dump($query);
+						echo 'command: ';
+			var_dump($command);
+			echo '</pre>';
 		}
 
 		// Return the validity of the route.
@@ -136,21 +136,22 @@ echo '</pre>';
 			switch ($params['command']) {
 				case 'create':
 					$results = $this->createUser();
-	    break; case 'read':
+				break; 
+				case 'read':
 					$results = $this->readUser();
-	    break;
+				break;
 				case 'index':
 					$results = $this->indexUser();
-	    break;
+				break;
 				case 'update':
 					$results = $this->updateUser();
-	    break;
+				break;
 				case 'delete':
 					$results = $this->deleteUser();
-	    break;
+				break;
 				case '':
 					$results = $this->defaultPage();
-	    break;
+				break;
 				default:
 					$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid command.');
 					$results = $this->routeError();
@@ -175,8 +176,8 @@ echo '</pre>';
 	public function routeError() {
 		if (Configuration::DEBUG) {
 			echo '<pre>routeError Params: ';
-var_dump($this->getParams());
-echo '</pre>';
+			var_dump($this->getParams());
+			echo '</pre>';
 		}
 		$this->view->render($this->getParams(), 'routeError', $this->getErrors());
 		return false;

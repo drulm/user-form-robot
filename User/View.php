@@ -31,23 +31,23 @@ class View {
 		switch ($type) {
 			case 'index':
 				$html = $this->renderIndex($data);
-	   break;
+			break;
 
 			case 'read':
 				$html = $this->renderRead($data);
-	   break;
+			break;
 
 			case 'otherAction':
 				$html = $this->renderOtherAction($data);
-	   break;
+			break;
 
 			case 'routeError':
 				$html = $this->renderRouteError($data);
-	   break;
+			break;
 
 			case 'defaultPage':
 				$html = $this->renderDefaultPage();
-	   break;
+			break;
 
 			case 'json':
 				$this->renderJson($data);
