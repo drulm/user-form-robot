@@ -2,6 +2,8 @@
 
 ## A small framework for creating, reading, updating and deleting users.
 
+## Darrell Raymond Ulm
+
 Uses a Vagrant Image:  
 
 | Type           | Value                  |
@@ -19,15 +21,15 @@ Uses a Vagrant Image:
 
 ## Command Examples:
 
-* CREATE:  http://192.168.59.76/create/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames
-* CREATE: http://192.168.59.76/index.php?command=create&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames
+* CREATE:  http://192.168.59.76/create/e/Albert@math.dev/fn/Albert/Brudzewski/T./p/Maths
+* CREATE: http://192.168.59.76/index.php?command=create&e=Albert@math.dev&fn=Albert&ln=Brudzewski&p=Maths
 * CREATE: http://192.168.59.76/index.php?command=create&e=email6.dev&fn=first1&ln=last1&p=oassword1&type=json
-* CREATE: http://192.168.59.76/create/e/ignacy7@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/type/json
+* CREATE: http://192.168.59.76/create/e/Albert@math.dev/fn/Albert/ln/Brudzewski/p/Maths/type/json
 * READ: http://192.168.59.76/read/id/100
 * READ: http://192.168.59.76/index.php?command=read&id=100
 * READ json output: http://192.168.59.76/read/id/6/type/json
 * READ json output: http://192.168.59.76/index.php?command=read&id=6&type=json
-* UPDATE: http://192.168.59.76/update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/100
+* UPDATE: http://192.168.59.76/update/e/Albert@math.dev/fn/Albert/ln/Brudzewski/p/Maths/id/100
 * UPDATE: http://192.168.59.76/index.php?command=update&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=100
 * UPDATE: http://192.168.59.76/index.php?command=update&e=ignacy8@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=6&type=json
 * UPDATE: http://192.168.59.76/update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/6/type/json;
