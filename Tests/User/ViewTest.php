@@ -167,7 +167,7 @@ HTML;
 
 $expected = <<<HTML
 <h1>Action: action</h1>
-<h2>Outcome: false</h2>
+<h2>Outcome: </h2>
 HTML;
 
 		$this->assertEquals($expected, $result);
