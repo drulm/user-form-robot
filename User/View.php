@@ -1,10 +1,9 @@
 <?php
 /**
- * 
  * User view
  *
  * PHP version 7.0
- * 
+ *
  * @TODO namespace
  */
 namespace User;
@@ -14,67 +13,64 @@ use params\Configuration;
 
 class View
 {
-   
    /**
-     * Class constructor
-     */
-    public function __construct() 
-    {
-        // Add if needed for future.
-    }
-   
-    /**
-     * Main render method, selects the render based on type.
-     * 
-     * @param array $data               Data used for the render.
-     * @param string $type              Type of render to generate.
-     *
-     */
-    public function render($data, $type, $errors)
-    {
-        switch ($type) {
-            case 'index':
-                $html = $this->renderIndex($data);
-                break;
+	* Class constructor
+	*/
+	public function __construct() {
+		// Add if needed for future.
+	}
 
-            case 'read':
-                $html = $this->renderRead($data);
-                break;
+	/**
+	 * Main render method, selects the render based on type.
+	 *
+	 * @param array $data               Data used for the render.
+	 * @param string $type              Type of render to generate.
+	 *
+	 * @return void
+	 */
+	public function render($data, $type, $errors) {
+		switch ($type) {
+			case 'index':
+				$html = $this->renderIndex($data);
+	   break;
 
-            case 'otherAction':
-                $html = $this->renderOtherAction($data);
-                break;
-            
-            case 'routeError':
-                $html = $this->renderRouteError($data);
-                break;
-            
-            case 'defaultPage':
-                $html = $this->renderDefaultPage();
-                break;
-            
-            case 'json':
-                $this->renderJson($data);
-                return;
-            
-            default:
-                $html = $this->renderRouteError($data);
-                break;
-        }
-        
-        $errorMarkup = \params\Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
-        
-        $this->renderTemplate($html, $errorMarkup);
-    }
-    
-    /**
-     * Render HTML for a simple default page.
-     * 
-     * @param type $data            Parameter data, if needed.
-     * @return string               The HTML to display.
-     */
-    public function renderDefaultPage() 
-    {
+			case 'read':
+				$html = $this->renderRead($data);
+	   break;
+
+			case 'otherAction':
+				$html = $this->renderOtherAction($data);
+	   break;
+
+			case 'routeError':
+				$html = $this->renderRouteError($data);
+	   break;
+
+			case 'defaultPage':
+				$html = $this->renderDefaultPage();
+	   break;
+
+			case 'json':
+				$this->renderJson($data);
+	   return;
+
+			default:
+				$html = $this->renderRouteError($data);
+	   break;
+		}
+
+		$errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
+
+		$this->renderTemplate($html, $errorMarkup);
+	}
+
+	/**
+	 * Render HTML for a simple default page.
+	 *
+	 * @param type $data            Parameter data, if needed.
+	 * @return string               The HTML to display.
+	 */
+	public function renderDefaultPage() {
 $markup = <<<HTML
 <h1>User MVC site</h1>
 <h2>Default Page</h2>
@@ -100,41 +96,37 @@ $markup = <<<HTML
 <li>DEFAULT PAGE / HOST: example: localhost/index.php</li>
 </ul>
 HTML;
-        
-        return $markup;
-    }
 
-    /**
-     * Generate html for when a route error occurs.
-     * 
-     * @param array $data           Array of one user from a read.
-     * @return string               The HTML to display.
-     */
-    public function renderRouteError($data) 
-    {
-        
-        ob_start();
-        print_r($data['query']);
-        $query = ob_get_clean();
+		return $markup;
+	}
+
+	/**
+	 * Generate html for when a route error occurs.
+	 *
+	 * @param array $data           Array of one user from a read.
+	 * @return string               The HTML to display.
+	 */
+	public function renderRouteError($data) {
+		ob_start();
+		print_r($data['query']);
+		$query = ob_get_clean();
 
 $markup = <<<HTML
 <h1>Route Error:</h1>
 <h2>Command: {$data['command']}</h2>
 <h2>Query: {$query}</h2>
 HTML;
-        
-        return $markup;
-    }
-    
-    /**
-     * Generate html for reading a single user.
-     * 
-     * @param array $data           Array of one user from a read.
-     * @return string               The HTML to display.
-     */
-    public function renderRead($data) 
-    {
 
+		return $markup;
+	}
+
+	/**
+	 * Generate html for reading a single user.
+	 *
+	 * @param array $data           Array of one user from a read.
+	 * @return string               The HTML to display.
+	 */
+	public function renderRead($data) {
 $markup = <<<HTML
 <h1>User Id: {$data['id_users']}</h1>
 <h2>Email: {$data['email']}</h2>
@@ -142,75 +134,70 @@ $markup = <<<HTML
 <h2>Last name: {$data['last_name']}</h2>
 <h2>Password (hashed): {$data['passwd']}</h2>
 HTML;
-        
-        return $markup;
-    }
-    
-    /**
-     * Generate HTML for rendering all users.
-     * 
-     * @param array $data           Array of all users.
-     * @return string               HTML generated.
-     */
-    public function renderIndex($data) 
-    {
-        ob_start();
-        echo '<table><thead><tr><th>';
-        echo implode('</th><th>', array_keys(current($data)));
-        echo '</tr></thead><tbody>';
-        
-        foreach ($data as $row) {
-            array_map('htmlentities', $row);
-            echo '<tr><td>' . implode('</td><td>', $row) . '</td></tr>'; 
-        }
-        echo '</tbody></table>';
-        $html = ob_get_clean();
-        return $html;
-    }
-    
-    /**
-     * Render simple page based on status of an action (command).
-     * 
-     * @param array $data           The data for this render
-     *      $data[0] = action (string) => success (boolean)
-     *      $data[1..n] = additional data
-     * @return string               HTML generated.
-     */
-    public function renderOtherAction($data) 
-    {
-        
-        $value = reset($data);
-        $action = key($data);
-        
-        $outcome = $value ? "true" : "false";
-        
+
+		return $markup;
+	}
+
+	/**
+	 * Generate HTML for rendering all users.
+	 *
+	 * @param array $data           Array of all users.
+	 * @return string               HTML generated.
+	 */
+	public function renderIndex($data) {
+		ob_start();
+		echo '<table><thead><tr><th>';
+		echo implode('</th><th>', array_keys(current($data)));
+		echo '</tr></thead><tbody>';
+
+		foreach ($data as $row) {
+			array_map('htmlentities', $row);
+			echo '<tr><td>' . implode('</td><td>', $row) . '</td></tr>';
+		}
+		echo '</tbody></table>';
+		$html = ob_get_clean();
+		return $html;
+	}
+
+	/**
+	 * Render simple page based on status of an action (command).
+	 *
+	 * @param array $data           The data for this render
+	 *      $data[0] = action (string) => success (boolean)
+	 *      $data[1..n] = additional data
+	 * @return string               HTML generated.
+	 */
+	public function renderOtherAction($data) {
+		$value = reset($data);
+		$action = key($data);
+
+		$outcome = $value ? 'true' : 'false';
+
 $markup = <<<HTML
 <h1>Action: {$action}</h1>
 <h2>Outcome: {$outcome}</h2>
 HTML;
-        
-        return $markup;
-    }
-    
-    /**
-     * Generate JSON based on data.
-     * 
-     * @param array $data           The data to render.
-     * @return string               The generated HTML.
-     */
-    public function renderJson($data) 
-    {
-        echo json_encode($data, JSON_PRETTY_PRINT);
-    }
-    
-    /**
-     * Create basic page based on the data and echo it.
-     * 
-     * @param type $html            The HTML to echo to the screen.
-     */
-    public function renderTemplate($html, $errors) 
-    {
 
+		return $markup;
+	}
+
+	/**
+	 * Generate JSON based on data.
+	 *
+	 * @param array $data           The data to render.
+	 * @return string               The generated HTML.
+	 */
+	public function renderJson($data) {
+		echo json_encode($data, JSON_PRETTY_PRINT);
+	}
+
+	/**
+	 * Create basic page based on the data and echo it.
+	 *
+	 * @param type $html            The HTML to echo to the screen.
+	 * @return void
+	 */
+	public function renderTemplate($html, $errors) {
 $markup = <<<HTML
 <!DOCTYPE html>
 <html>
@@ -225,23 +212,21 @@ $markup = <<<HTML
     </body>
 </html>
 HTML;
-    
-    echo $markup;
-    }
-    
-    /**
-     * Generates HTML for errors if shown.
-     * 
-     * @param array $data           Array of error strings.
-     * @return string               Returns HTML.
-     */
-    public function renderErrors($errors) 
-    {
-        $markup = '';   
-        foreach ($errors as $errString) {
-            $markup .= '<pre><h4>' . $errString . '</h4></pre>';
-        }
-        return $markup;
-    }
-    
+
+	echo $markup;
+	}
+
+	/**
+	 * Generates HTML for errors if shown.
+	 *
+	 * @param array $data           Array of error strings.
+	 * @return string               Returns HTML.
+	 */
+	public function renderErrors($errors) {
+		$markup = ''; foreach ($errors as $errString) {
+			$markup .= '<pre><h4>' . $errString . '</h4></pre>';
+		}
+		return $markup;
+	}
+
 }

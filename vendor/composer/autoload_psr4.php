@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'params\\' => array($baseDir . '/params'),
     'User\\' => array($baseDir . '/User'),
+    'PSR2R\\' => array($vendorDir . '/fig-r/psr2r-sniffer/PSR2R'),
 );
