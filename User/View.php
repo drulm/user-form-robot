@@ -58,8 +58,11 @@ class View {
 	   break;
 		}
 
-		$errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
-
+		$errorMarkup = '';
+		if (isset($data['json']) && !$data['json']) {
+			$errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
+		}
+		
 		$this->renderTemplate($html, $errorMarkup);
 	}
 
@@ -76,14 +79,20 @@ $markup = <<<HTML
 <ul>
 <li>CREATE: /create/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames</li>
 <li>CREATE: /index.php?command=create&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames</li>
+<li>CREATE: /index.php?command=create&e=email6.dev&fn=first1&ln=last1&p=oassword1&type=json</li>
+<li>CREATE: /create/e/ignacy7@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/type/json</li>
 <li>READ: read/id/100</li>
 <li>READ: index.php?command=read&id=100</li>
 <li>READ json output: /read/id/6/type/json</li>
 <li>READ json output: /index.php?command=read&id=6&type=json</li>
 <li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/100</li>
 <li>UPDATE: /index.php?command=update&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=100</li>
+<li>UPDATE: /index.php?command=update&e=ignacy8@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=6&type=json</li>
+<li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/6/type/json;
 <li>DELETE: /delete/id/100</li>
 <li>DELETE: /index.php?command=delete&id=100</li>
+<li>DELETE: /index.php?command=delete&id=4&type=json</li>
+<li>DELETE: /delete/id/13/type/json</li>
 <li>INDEX (list all): /index</li>
 <li>INDEX (list all) json output: /index/type/json</li>
 <li>INDEX (list all): /index.php?command=index</li>
@@ -170,11 +179,19 @@ HTML;
 		$action = key($data);
 
 		$outcome = $value ? 'true' : 'false';
-
+		
+		if ($data['json']) {
+			$jsonOutput = ['result' => [$action => $outcome]];
+			$markup = json_encode($jsonOutput, JSON_PRETTY_PRINT);
+		}
+		else {
+		
 $markup = <<<HTML
 <h1>Action: {$action}</h1>
 <h2>Outcome: {$outcome}</h2>
 HTML;
+
+		}
 
 		return $markup;
 	}

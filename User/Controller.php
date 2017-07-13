@@ -205,7 +205,10 @@ echo '</pre>';
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not update, check parameters.');
 		}
-		$this->view->render(['update' => $results], 'otherAction', $this->getErrors());
+		$query = $this->getQueryParams();
+		$json = isset($query['type']) && $query['type'] == 'json'; 
+		$this->view->render(['update' => $results, 'json' => $json], 
+			'otherAction', $this->getErrors());
 		return $results;
 	}
 
@@ -222,7 +225,10 @@ echo '</pre>';
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not create new user, check parameters.');
 		}
-		$this->view->render(['create' => $results], 'otherAction', $this->getErrors());
+		$query = $this->getQueryParams();
+		$json = isset($query['type']) && $query['type'] == 'json'; 
+		$this->view->render(['create' => $results, 'json' => $json], 
+			'otherAction', $this->getErrors());
 
 		return $results;
 	}
@@ -241,7 +247,10 @@ echo '</pre>';
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'User could not be deleted. Check ID.');
 		}
-		$this->view->render(['delete' => $results], 'otherAction', $this->getErrors());
+		$query = $this->getQueryParams();
+		$json = isset($query['type']) && $query['type'] == 'json'; 
+		$this->view->render(['delete' => $results, 'json' => $json], 
+			'otherAction', $this->getErrors());
 		return $results;
 	}
 
