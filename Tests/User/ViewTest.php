@@ -162,7 +162,7 @@ HTML;
 	 * @return void
 	 */
 	public function testRenderOtherAction() {
-		$data = ['action' => false];
+		$data = ['action' => false, 'json' => false];
 		$result = $this->object->renderOtherAction($data);
 
 $expected = <<<HTML
