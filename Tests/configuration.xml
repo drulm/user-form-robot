@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>User</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">User</directory>
+            <file></file>
+        </whitelist>
+    </filter>
+</phpunit>
+<!-- see http://www.phpunit.de/wiki/Documentation -->
+<!--phpunit bootstrap="/path/to/bootstrap.php"
+         colors="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="true">
+</phpunit-->
