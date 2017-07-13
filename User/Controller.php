@@ -308,7 +308,9 @@ echo '</pre>';
 	}
 
 	/**
-	 * @return type
+	 * Returns parameters of path / query.
+	 *
+	 * @return array
 	 */
 	public function getParams() {
 		return $this->parameters;
@@ -326,7 +328,7 @@ echo '</pre>';
 	/**
 	 * Returns the User model instance.
 	 *
-	 * @return User             returns user model instance.
+	 * @return \User\Model
 	 */
 	public function getUser() {
 		return $this->user;

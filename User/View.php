@@ -10,12 +10,10 @@ namespace User;
 
 use params\Configuration;
 
-
-class View
-{
-   /**
-	* Class constructor
-	*/
+class View {
+	/**
+	 * Class constructor
+	 */
 	public function __construct() {
 		// Add if needed for future.
 	}
@@ -25,6 +23,7 @@ class View
 	 *
 	 * @param array $data               Data used for the render.
 	 * @param string $type              Type of render to generate.
+	 * @param array $errors				Error strings in array.
 	 *
 	 * @return void
 	 */
@@ -67,7 +66,6 @@ class View
 	/**
 	 * Render HTML for a simple default page.
 	 *
-	 * @param type $data            Parameter data, if needed.
 	 * @return string               The HTML to display.
 	 */
 	public function renderDefaultPage() {
@@ -194,7 +192,9 @@ HTML;
 	/**
 	 * Create basic page based on the data and echo it.
 	 *
-	 * @param type $html            The HTML to echo to the screen.
+	 * @param string $html			The HTML to echo to the screen.
+	 * @param array $errors			String array of error messages.
+	 *
 	 * @return void
 	 */
 	public function renderTemplate($html, $errors) {
@@ -219,7 +219,7 @@ HTML;
 	/**
 	 * Generates HTML for errors if shown.
 	 *
-	 * @param array $data           Array of error strings.
+	 * @param array $errors			Array of error strings.
 	 * @return string               Returns HTML.
 	 */
 	public function renderErrors($errors) {
