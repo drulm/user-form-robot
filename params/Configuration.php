@@ -4,6 +4,8 @@
  * User configuration settings.
  *
  * PHP version 7.0
+ *
+ * by: Darrell Ulm
  */
 namespace params;
 

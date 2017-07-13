@@ -3,6 +3,8 @@
  * A User pre controller
  *
  * PHP version 7.0
+ *
+ * by: Darrell Ulm
  */
 
 /**

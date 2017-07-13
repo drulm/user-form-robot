@@ -4,7 +4,7 @@
  *
  * PHP version 7.0
  *
- * @TODO namespace
+ * by: Darrell Ulm
  */
 namespace User;
 
@@ -88,7 +88,7 @@ $markup = <<<HTML
 <li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/100</li>
 <li>UPDATE: /index.php?command=update&e=ignacy@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=100</li>
 <li>UPDATE: /index.php?command=update&e=ignacy8@prtl.dev&fn=Ignacy&ln=T.&p=PrtlGames&id=6&type=json</li>
-<li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/6/type/json;
+<li>UPDATE: /update/e/ignacy@prtl.dev/fn/Ignacy/ln/T./p/PrtlGames/id/6/type/json</li>
 <li>DELETE: /delete/id/100</li>
 <li>DELETE: /index.php?command=delete&id=100</li>
 <li>DELETE: /index.php?command=delete&id=4&type=json</li>

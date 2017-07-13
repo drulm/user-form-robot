@@ -4,7 +4,7 @@
  *
  * PHP version 7.0
  *
- * @TODO namespace
+ * by: Darrell Ulm
  */
 namespace User;
 
