@@ -1,13 +1,12 @@
 # user-form-robot
+## Darrell Raymond Ulm
 
 https://drulm.github.io/user-form-robot/
 
 ## A small toy framework for creating, reading, updating and deleting users.
 ### Uses Twig template engine
 ### Uses Composer
-### Simple theme with bootstrap
-
-## Darrell Raymond Ulm
+### Simple theme with Bootstrap
 
 ### Main Code is in User directory
 ### Front controller is index.php
