@@ -200,10 +200,7 @@ The default page with instructions for use.
 # PHPUnit Tests
 
 ## To Run PHPUnit tests
-- cd /vagrant/Tests
 - phpunit --configuration configuration.xml --coverage-html ./report User
-### Tests can be seen at: 
-- http://192.168.59.76/Tests/report/index.html
 
 ## Database Schema
 ```
