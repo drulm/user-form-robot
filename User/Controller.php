@@ -197,7 +197,7 @@ class Controller {
 	}
   
   /**
-   * For Create Delete and Update calls render.
+   * Sets parameters and calls render.
    * 
    * @param array $query
    * @param mixed $results
@@ -208,14 +208,19 @@ class Controller {
       $this->view->renderJson([$type => $results], $otherAction);
     }
     else {
-      if ($type != 'read') {
+      if ($type == 'read') {
+        $this->view->renderTemplate('read.twig', $results);
+      }
+      else if ($type == 'index') {
+        $params['errors'] = $this->getErrors();
+        $params['results'] = $results;
+        $this->view->renderTemplate('index.twig', $params);
+      }
+      else {
         $params['outcome'] = $results;
         $params['action'] = $type;
         $params['errors'] = $this->getErrors();
         $this->view->renderTemplate('action.twig', $params);
-      }
-      else {
-        $this->view->renderTemplate('read.twig', $results);
       }
     }
   }
@@ -292,17 +297,6 @@ class Controller {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not read user from database, Id not valid or missing.');
 		}
     $this->callRender($results, 'read', FALSE);
-/*
-		$query = $this->getQueryParams();
-		if (isset($query['type']) && $query['type'] == 'json') {
-			$this->view->render($results, 'json', $this->getErrors());
-		}
-		else {
-      $results['errors'] = $this->getErrors();
-      $this->view->renderTemplate('read.twig', $results);
-		}
- * 
- */
 		return $results;
 	}
 
@@ -316,16 +310,7 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not index (read all) users from database.');
 		}
-
-		$query = $this->getQueryParams();
-		if (isset($query['type']) && $query['type'] == 'json') {
-			$this->view->render($results, 'json', $this->getErrors());
-		}
-		else {
-      $params['results'] = $results;
-      $params['errors'] = $this->getErrors();
-      $this->view->renderTemplate('index.twig', $params);
-		}
+    $this->callRender($results, 'index', FALSE);
 		return $results;
 	}
 
