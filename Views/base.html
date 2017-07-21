@@ -16,12 +16,11 @@
             </div>
         </nav>
 
-       <!-- {% for message in flash_messages %}
-            <div class="alert alert-{{ message.type }}">
-                {{ message.body }}
+       {% for message in _context['errors'] %}
+            <div class="alert alert-info">
+                {{ message }}
             </div>
         {% endfor %}
-        -->
        
         {% block body %}
         {% endblock %}

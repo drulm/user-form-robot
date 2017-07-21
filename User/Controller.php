@@ -155,16 +155,18 @@ class Controller {
           break;
 				default:
 					$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid command.');
-					$results = $this->routeError();
+          $results = $this->routeError();
+          return $results;
 			}
 		}
 		else {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid route.');
-			$results = $this->routeError();
+      $results = $this->routeError();
+      return $results;
 		}
 
 		if (!$results) {
-			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid route.');
+			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Action returned false.');
 		}
 		return $results;
 	}
@@ -180,7 +182,9 @@ class Controller {
 			var_dump($this->getParams());
 			echo '</pre>';
 		}
-		$this->view->render($this->getParams(), 'routeError', $this->getErrors());
+		$results = $this->getParams();
+    $results['errors'] = $this->getErrors();
+    $this->view->renderTemplate('404.twig', $results);
 		return false;
 	}
 
@@ -209,6 +213,7 @@ class Controller {
     }
     else {
       if ($type == 'read') {
+        $results['errors'] = $this->getErrors();
         $this->view->renderTemplate('read.twig', $results);
       }
       else if ($type == 'index') {

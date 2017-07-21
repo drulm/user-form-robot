@@ -43,6 +43,10 @@ class View {
   {
       static $twig = null;
 
+      if (! \params\Configuration::VIEW_ERRORS) {
+        unset($args['errors']);
+      }
+
       if ($twig === null) {
           $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/Views');
           $twig = new \Twig_Environment($loader);
@@ -67,39 +71,6 @@ class View {
       $jsonOutput = ['result' => [$action => $outcome]];
 			echo json_encode($jsonOutput, JSON_PRETTY_PRINT);
     }
-	}
-  
-  /**
-	 * Generate html for when a route error occurs.
-	 *
-	 * @param array $data Array of one user from a read.
-	 * @return string The HTML to display.
-	 */
-	public function renderRouteError($data) {
-		ob_start();
-		print_r($data['query']);
-		$query = ob_get_clean();
-
-$markup = <<<HTML
-<h1>Route Error:</h1>
-<h2>Command: {$data['command']}</h2>
-<h2>Query: {$query}</h2>
-HTML;
-
-		return $markup;
-	}
-  
-  /**
-	 * Generates HTML for errors if shown.
-	 *
-	 * @param array $errors Array of error strings.
-	 * @return string Returns HTML.
-	 */
-	public function renderErrors($errors) {
-		$markup = ''; foreach ($errors as $errString) {
-			$markup .= '<pre><h4>' . $errString . '</h4></pre>';
-		}
-		return $markup;
 	}
 
 }
