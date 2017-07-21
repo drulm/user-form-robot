@@ -305,7 +305,9 @@ class Controller {
 			$this->view->render($results, 'json', $this->getErrors());
 		}
 		else {
-			$this->view->render($results, 'index', $this->getErrors());
+      $params['results'] = $results;
+      $params['errors'] = $this->getErrors();
+      $this->view->renderTemplate('index.twig', $params);
 		}
 		return $results;
 	}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}User App Index{% endblock %}
+{% block body %}
+    
+<div class="container">
+    <table class="table">
+        <thead><tr><th>ID</th><th>Email</th><th>First</th><th>Last</th><th>Password</th></tr></thead>
+        {% for key, value in _context['results'] %}
+          <tr>
+          {% for column in value %}
+            <td>{{ column }}</td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
