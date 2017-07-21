@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  * User configuration settings.
  *
  * PHP version 7.0
@@ -62,16 +62,15 @@ class Configuration
     /**
      * Set to true for developer messages.
      * Set to false during testing.
-     * 
+     *
      * @var boolean
      */
     const DEBUG = false;
     
     /**
      * Set size of TEST data
-     * 
+     *
      * @var boolean
      */
     const TEST_DATA_SIZE = 10;
-
 }

@@ -1,6 +1,9 @@
 # user-form-robot
 
-## A small framework for creating, reading, updating and deleting users.
+## A small toy framework for creating, reading, updating and deleting users.
+## Uses Twig template engine
+## Uses Composer
+## Simple theme with bootstrap
 
 ## Darrell Raymond Ulm
 

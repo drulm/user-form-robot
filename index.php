@@ -1,6 +1,8 @@
 <?php
+
 /**
- * A User pre controller
+ * @file
+ * A User pre controller.
  *
  * PHP version 7.0
  *
@@ -8,17 +10,17 @@
  */
 
 /**
- * Composer
+ * Composer.
  */
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
-use User\Controller;
 use params\Configuration;
+use User\Controller;
 
-if (\params\Configuration::DEBUG) {
-	error_reporting(E_ALL);
-	ini_set('display_errors', true);
-	ini_set('display_startup_errors', true);
+if (Configuration::DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', true);
+    ini_set('display_startup_errors', true);
 }
 
 // Create a new controller instance.
