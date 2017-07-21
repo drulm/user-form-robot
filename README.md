@@ -1,9 +1,9 @@
 # user-form-robot
 
 ## A small toy framework for creating, reading, updating and deleting users.
-## Uses Twig template engine
-## Uses Composer
-## Simple theme with bootstrap
+### Uses Twig template engine
+### Uses Composer
+### Simple theme with bootstrap
 
 ## Darrell Raymond Ulm
 
@@ -218,15 +218,3 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ```
-
-## From original notes:
-### Uses a Vagrant Image:  
-
-| Type           | Value                  |
-|----------------|------------------------|
-| MySQL Username | my_app                 |
-| Mysql Password | secret                 |
-| Mysql Database | my_app                 |
-| SSH Username   | vagrant                |
-| SSH Password   | vagrant                |
-
