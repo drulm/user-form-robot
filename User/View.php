@@ -17,42 +17,71 @@ class View {
 	public function __construct() {
 		// Add if needed for future.
 	}
+  
+  /**
+   * Render a view template using Twig
+   *
+   * @param string $template The template file
+   * @param array $args Associative array of data to display in the view (optional)
+   *
+   * @return void
+   */
+  public static function renderTemplate($template, $args = [])
+  {
+      echo static::getTemplate($template, $args);
+  }
+
+  /**
+   * Get the contents of a view template using Twig
+   *
+   * @param string $template The template filename
+   * @param array $args Data to display, optional
+   *
+   * @return string
+   */
+  public static function getTemplate($template, $args = [])
+  {
+      static $twig = null;
+
+      if ($twig === null) {
+          $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/Views');
+          $twig = new \Twig_Environment($loader);
+      }
+
+      return $twig->render($template, $args);
+  }
 
 	/**
 	 * Main render method, selects the render based on type.
 	 *
-	 * @param array $data               Data used for the render.
-	 * @param string $type              Type of render to generate.
-	 * @param array $errors				Error strings in array.
+	 * @param array $data Data used for the render.
+	 * @param string $type Type of render to generate.
+	 * @param array $errors Error strings in array.
 	 *
 	 * @return void
 	 */
+  /*
 	public function render($data, $type, $errors) {
 		switch ($type) {
 			case 'index':
 				$html = $this->renderIndex($data);
-			break;
-
+        break;
 			case 'read':
 				$html = $this->renderRead($data);
-			break;
-
+        $this->renderTemplate($template, $args = []);
+        break;
 			case 'otherAction':
 				$html = $this->renderOtherAction($data);
-			break;
-
+        break;
 			case 'routeError':
 				$html = $this->renderRouteError($data);
-			break;
-
+        break;
 			case 'defaultPage':
 				$html = $this->renderDefaultPage();
-			break;
-
+        break;
 			case 'json':
 				$this->renderJson($data);
-	   return;
-
+        return;
 			default:
 				$html = $this->renderRouteError($data);
 	   break;
@@ -63,14 +92,17 @@ class View {
 			$errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
 		}
 		
-		$this->renderTemplate($html, $errorMarkup);
+		$this->renderTemplateOld($html, $errorMarkup);
 	}
+   * 
+   */
 
 	/**
 	 * Render HTML for a simple default page.
 	 *
-	 * @return string               The HTML to display.
+	 * @return string The HTML to display.
 	 */
+  /*
 	public function renderDefaultPage() {
 $markup = <<<HTML
 <h1>User MVC site</h1>
@@ -106,12 +138,14 @@ HTML;
 
 		return $markup;
 	}
+   * 
+   */
 
 	/**
 	 * Generate html for when a route error occurs.
 	 *
-	 * @param array $data           Array of one user from a read.
-	 * @return string               The HTML to display.
+	 * @param array $data Array of one user from a read.
+	 * @return string The HTML to display.
 	 */
 	public function renderRouteError($data) {
 		ob_start();
@@ -130,10 +164,10 @@ HTML;
 	/**
 	 * Generate html for reading a single user.
 	 *
-	 * @param array $data           Array of one user from a read.
-	 * @return string               The HTML to display.
+	 * @param array $data Array of one user from a read.
+	 * @return string The HTML to display.
 	 */
-	public function renderRead($data) {
+/*	public function renderRead($data) {
 $markup = <<<HTML
 <h1>User Id: {$data['id_users']}</h1>
 <h2>Email: {$data['email']}</h2>
@@ -144,12 +178,14 @@ HTML;
 
 		return $markup;
 	}
+ * 
+ */
 
 	/**
 	 * Generate HTML for rendering all users.
 	 *
-	 * @param array $data           Array of all users.
-	 * @return string               HTML generated.
+	 * @param array $data Array of all users.
+	 * @return string HTML generated.
 	 */
 	public function renderIndex($data) {
 		ob_start();
@@ -169,10 +205,10 @@ HTML;
 	/**
 	 * Render simple page based on status of an action (command).
 	 *
-	 * @param array $data           The data for this render
+	 * @param array $data The data for this render
 	 *      $data[0] = action (string) => success (boolean)
 	 *      $data[1..n] = additional data
-	 * @return string               HTML generated.
+	 * @return string HTML generated.
 	 */
 	public function renderOtherAction($data) {
 		$outcome = reset($data);
@@ -197,8 +233,8 @@ HTML;
 	/**
 	 * Generate JSON based on data.
 	 *
-	 * @param array $data           The data to render.
-	 * @return string               The generated HTML.
+	 * @param array $data The data to render.
+	 * @return string The generated HTML.
 	 */
 	public function renderJson($data) {
 		echo json_encode($data, JSON_PRETTY_PRINT);
@@ -207,12 +243,12 @@ HTML;
 	/**
 	 * Create basic page based on the data and echo it.
 	 *
-	 * @param string $html			The HTML to echo to the screen.
-	 * @param array $errors			String array of error messages.
+	 * @param string $html The HTML to echo to the screen.
+	 * @param array $errors String array of error messages.
 	 *
 	 * @return void
 	 */
-	public function renderTemplate($html, $errors) {
+	public function renderTemplateOld($html, $errors) {
 $markup = <<<HTML
 <!DOCTYPE html>
 <html>
@@ -234,8 +270,8 @@ HTML;
 	/**
 	 * Generates HTML for errors if shown.
 	 *
-	 * @param array $errors			Array of error strings.
-	 * @return string               Returns HTML.
+	 * @param array $errors Array of error strings.
+	 * @return string Returns HTML.
 	 */
 	public function renderErrors($errors) {
 		$markup = ''; foreach ($errors as $errString) {

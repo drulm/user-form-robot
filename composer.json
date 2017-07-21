@@ -1,6 +1,7 @@
 {
     "require": {
-        "fig-r/psr2r-sniffer": "~0.4.1"
+        "fig-r/psr2r-sniffer": "~0.4.1",
+        "twig/twig": "~2.0"
     },
     "autoload": {
         "psr-4": {

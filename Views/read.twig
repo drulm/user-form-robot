@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}User App Read - {{ first_name }} {{ last_name }}{% endblock %}
+{% block body %}
+
+<h1>User Id: {{ id_users }}</h1>
+<h2>Email: {{ email }}</h2>
+<h2>First name: {{ first_name }}</h2>
+<h2>Last name: {{ last_name }}</h2>
+<h2>Password (hashed): {{ passwd }}</h2>
+
+{% endblock %}

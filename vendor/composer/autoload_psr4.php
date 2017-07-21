@@ -8,5 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'params\\' => array($baseDir . '/params'),
     'User\\' => array($baseDir . '/User'),
+    'Twig\\' => array($vendorDir . '/twig/twig/src'),
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'PSR2R\\' => array($vendorDir . '/fig-r/psr2r-sniffer/PSR2R'),
 );
