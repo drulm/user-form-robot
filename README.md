@@ -1,11 +1,12 @@
 # user-form-robot
+## Darrell Raymond Ulm
+
+https://drulm.github.io/user-form-robot/
 
 ## A small toy framework for creating, reading, updating and deleting users.
 ### Uses Twig template engine
 ### Uses Composer
-### Simple theme with bootstrap
-
-## Darrell Raymond Ulm
+### Simple theme with Bootstrap
 
 ### Main Code is in User directory
 ### Front controller is index.php
@@ -200,10 +201,7 @@ The default page with instructions for use.
 # PHPUnit Tests
 
 ## To Run PHPUnit tests
-- cd /vagrant/Tests
 - phpunit --configuration configuration.xml --coverage-html ./report User
-### Tests can be seen at: 
-- http://192.168.59.76/Tests/report/index.html
 
 ## Database Schema
 ```
