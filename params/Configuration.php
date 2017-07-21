@@ -51,13 +51,13 @@ class Configuration
      * Error prefix string for Model/Database errors.
      * @var string
      */
-    const DB_ERROR_MSG = "MODEL ERROR: ";
+    const DB_ERROR_MSG = 'MODEL ERROR: ';
     
     /**
      * Error prefix string for Controller errors.
      * @var string
      */
-    const CONT_ERROR_MSG = "CONTROLLER ERROR: ";
+    const CONT_ERROR_MSG = 'CONTROLLER ERROR: ';
     
     /**
      * Set to true for developer messages.

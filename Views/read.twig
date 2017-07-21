@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}User App Read - {{ first_name }} {{ last_name }}{% endblock %}
+{% block body %}
+
+<h1>Read Action</h1>
+<ul class="list-group">
+  <li class="list-group-item">
+    <span class="label label-primary">User Id:</span> {{ id_users }}
+  </li>
+  <li class="list-group-item">
+    <span class="label label-primary">Email:</span> {{ email }}
+  </li>
+  <li class="list-group-item">
+    <span class="label label-primary">First name:</span> {{ first_name }}
+  </li>
+  <li class="list-group-item">
+    <span class="label label-primary">Last name:</span> {{ last_name }}
+  </li>
+  <li class="list-group-item">
+    <span class="label label-primary">Password (hashed):</span> {{ passwd }}
+  </li>
+</ul>
+
+{% endblock %}

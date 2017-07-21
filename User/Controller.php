@@ -17,28 +17,28 @@ class Controller {
 	/**
 	 * Array of parameters from url, either by path or query parameters.
 	 *
-	 * @var array           Paramater array.
+	 * @var array Paramater array.
 	 */
 	protected $parameters = [];
 
 	/**
 	 * The Model / database class for User.
 	 *
-	 * @var \User\Model                   User Model class instance.
+	 * @var \User\Model User Model class instance.
 	 */
 	protected $user;
 
 	/**
 	 * The View for User.
 	 *
-	 * @var \User\View                    User View class instance.
+	 * @var \User\View User View class instance.
 	 */
 	protected $view;
 
 	/**
 	 * Class constructor
 	 *
-	 * @param array|null $parameters     Array of string, optional parameters from URL.
+	 * @param array|null $parameters Array of string, optional parameters from URL.
 	 */
 	public function __construct($parameters = null) {
 		$this->user = new Model();
@@ -49,9 +49,9 @@ class Controller {
 	/**
 	 * Analyse the URL route for User.
 	 *
-	 * @param string $url           The URL string.
+	 * @param string $url The URL string.
 	 *
-	 * @return bool              True if route is valid for user, false otherwise.
+	 * @return bool True if route is valid for user, false otherwise.
 	 */
 	public function analyseRoute($url) {
 		// Parse url into path and query parameters.
@@ -97,6 +97,7 @@ class Controller {
 		// Controller parameters are the command and the query elements.
 		$this->parameters = ['command' => $command, 'query' => $query];
 
+    // Only for DEBUG
 		if (Configuration::DEBUG) {
 			echo '<pre>path: ';
 			var_dump($path);
@@ -121,49 +122,51 @@ class Controller {
 	 * A dispatcher to direct the route by action (command) type.
 	 * Create, Read, Update, Delete, and Index (Read All).
 	 *
-	 * @param string $url          Path and query parameters from URL.
+	 * @param string $url Path and query parameters from URL.
 	 *
-	 * @return bool             True if command successful.
+	 * @return bool True if command successful.
 	 */
-	public function directRoute($url) { $routeGood = $this->analyseRoute($url);
+	public function directRoute($url) {
+    $routeGood = $this->analyseRoute($url);
 
 		$results = false;
 
 		$params = $this->getParams();
 
 		if ($routeGood || $params['command'] == '' && empty($params['query'])) {
-
 			switch ($params['command']) {
 				case 'create':
 					$results = $this->createUser();
-				break; 
+          break; 
 				case 'read':
 					$results = $this->readUser();
-				break;
+          break;
 				case 'index':
 					$results = $this->indexUser();
-				break;
+          break;
 				case 'update':
 					$results = $this->updateUser();
-				break;
+          break;
 				case 'delete':
 					$results = $this->deleteUser();
-				break;
+          break;
 				case '':
 					$results = $this->defaultPage();
-				break;
+          break;
 				default:
 					$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid command.');
-					$results = $this->routeError();
+          $results = $this->routeError();
+          return $results;
 			}
 		}
 		else {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid route.');
-			$results = $this->routeError();
+      $results = $this->routeError();
+      return $results;
 		}
 
 		if (!$results) {
-			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Not a valid route.');
+			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Action returned false.');
 		}
 		return $results;
 	}
@@ -171,7 +174,7 @@ class Controller {
 	/**
 	 * Controller action when there is a route error.
 	 *
-	 * @return bool          Returns false since route not successful.
+	 * @return bool Returns false since route not successful.
 	 */
 	public function routeError() {
 		if (Configuration::DEBUG) {
@@ -179,26 +182,61 @@ class Controller {
 			var_dump($this->getParams());
 			echo '</pre>';
 		}
-		$this->view->render($this->getParams(), 'routeError', $this->getErrors());
+		$results = $this->getParams();
+    $results['errors'] = $this->getErrors();
+    $this->view->renderTemplate('404.twig', $results);
 		return false;
 	}
 
 	/**
 	 * Controller action for a default page with no command (action).
 	 *
-	 * @return bool          Returns true since this is default page.
+	 * @return bool Returns true since this is default page.
 	 */
 	public function defaultPage() {
-		$this->view->render($this->getParams(), 'defaultPage', $this->getErrors());
+    $results = $this->getParams();
+    $results['errors'] = $this->getErrors();
+    $this->view->renderTemplate('default.twig', $results);
 		return true;
 	}
+  
+  /**
+   * Sets parameters and calls render.
+   * 
+   * @param array $query
+   * @param mixed $results
+   */
+  public function callRender($results, $type, $otherAction) {
+    $query = $this->getQueryParams();
+    if (isset($query['type']) && $query['type'] == 'json') {
+      $this->view->renderJson([$type => $results], $otherAction);
+    }
+    else {
+      if ($type == 'read') {
+        $results['errors'] = $this->getErrors();
+        $this->view->renderTemplate('read.twig', $results);
+      }
+      else if ($type == 'index') {
+        $params['errors'] = $this->getErrors();
+        $params['results'] = $results;
+        $this->view->renderTemplate('index.twig', $params);
+      }
+      else {
+        $params['outcome'] = $results;
+        $params['action'] = $type;
+        $params['errors'] = $this->getErrors();
+        $this->view->renderTemplate('action.twig', $params);
+      }
+    }
+  }
 
 	/**
 	 * Update a user at an ID key.
 	 *
-	 * @return bool          Returns true if updated correctly.
+	 * @return bool Returns true if updated correctly.
 	 */
-	public function updateUser() { $params = $this->getQueryParams();
+	public function updateUser() { 
+    $params = $this->getQueryParams();
 		$results = false;
 		if ($params) {
 			$results = $this->user->update($params);
@@ -206,19 +244,17 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not update, check parameters.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['update' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
+    $this->callRender($results, 'update', TRUE);
 		return $results;
 	}
 
 	/**
 	 * Create a new user, requires all parameters, except ID.
 	 *
-	 * @return bool          Returns true if user created correctly.
+	 * @return bool Returns true if user created correctly.
 	 */
-	public function createUser() { $params = $this->getQueryParams();
+	public function createUser() { 
+    $params = $this->getQueryParams();
 		$results = false;
 		if ($params) {
 			$results = $this->user->create($params);
@@ -226,18 +262,14 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not create new user, check parameters.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['create' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
-
+    $this->callRender($results, 'create', TRUE);
 		return $results;
 	}
 
 	/**
 	 * Delete a user for an ID key.
 	 *
-	 * @return bool              Returns true if user deleted successfully.
+	 * @return bool Returns true if user deleted successfully.
 	 */
 	public function deleteUser() {
 		$id = $this->getID();
@@ -248,19 +280,17 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'User could not be deleted. Check ID.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['delete' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
+    $this->callRender($results, 'delete', TRUE);
 		return $results;
 	}
 
 	/**
 	 * Read a single user at an ID.
 	 *
-	 * @return mixed            Returns data from read command or false if could not read.
+	 * @return mixed Returns data from read command or false if could not read.
 	 */
-	public function readUser() { $id = $this->getID();
+	public function readUser() { 
+    $id = $this->getID();
 		$results = false;
 		if ($id) {
 			$results = $this->user->read($id);
@@ -271,42 +301,28 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not read user from database, Id not valid or missing.');
 		}
-
-		$query = $this->getQueryParams();
-		if (isset($query['type']) && $query['type'] == 'json') {
-			$this->view->render($results, 'json', $this->getErrors());
-		}
-		else {
-			$this->view->render($results, 'read', $this->getErrors());
-		}
+    $this->callRender($results, 'read', FALSE);
 		return $results;
 	}
 
 	/**
 	 * Read and return all user data.
 	 *
-	 * @return mixed            Returns all user data, or false if could not read users from database.
+	 * @return mixed Returns all user data, or false if could not read users from database.
 	 */
 	public function indexUser() {
 		$results = $this->user->read();
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not index (read all) users from database.');
 		}
-
-		$query = $this->getQueryParams();
-		if (isset($query['type']) && $query['type'] == 'json') {
-			$this->view->render($results, 'json', $this->getErrors());
-		}
-		else {
-			$this->view->render($results, 'index', $this->getErrors());
-		}
+    $this->callRender($results, 'index', FALSE);
 		return $results;
 	}
 
 	/**
 	 * Returns ID for current URL parameters.
 	 *
-	 * @return mixed            Returns ID for 'id' parameter, or false if could not find ID.
+	 * @return mixed Returns ID for 'id' parameter, or false if could not find ID.
 	 */
 	public function getID() {
 		$params = $this->getQueryParams();
@@ -329,7 +345,7 @@ class Controller {
 	/**
 	 * Gets and returns only the query parameters, not the path.
 	 *
-	 * @return array            Query parameters array of string.
+	 * @return array Query parameters array of string.
 	 */
 	public function getQueryParams() {
 		return $this->getParams()['query'];
@@ -347,7 +363,7 @@ class Controller {
 	/**
 	 * Returns the error array, Controller version.
 	 *
-	 * @return array            Array of strings of error messages.
+	 * @return array Array of strings of error messages.
 	 */
 	public function getErrors() {
 		return $this->user->getErrors();
