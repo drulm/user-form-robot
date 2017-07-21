@@ -195,6 +195,30 @@ class Controller {
     $this->view->renderTemplate('default.twig', $results);
 		return true;
 	}
+  
+  /**
+   * For Create Delete and Update calls render.
+   * 
+   * @param array $query
+   * @param mixed $results
+   */
+  public function callRender($results, $type, $otherAction) {
+    $query = $this->getQueryParams();
+    if (isset($query['type']) && $query['type'] == 'json') {
+      $this->view->renderJson([$type => $results], $otherAction);
+    }
+    else {
+      if ($type != 'read') {
+        $params['outcome'] = $results;
+        $params['action'] = $type;
+        $params['errors'] = $this->getErrors();
+        $this->view->renderTemplate('action.twig', $params);
+      }
+      else {
+        $this->view->renderTemplate('read.twig', $results);
+      }
+    }
+  }
 
 	/**
 	 * Update a user at an ID key.
@@ -210,10 +234,7 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not update, check parameters.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['update' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
+    $this->callRender($results, 'update', TRUE);
 		return $results;
 	}
 
@@ -231,11 +252,7 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not create new user, check parameters.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['create' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
-
+    $this->callRender($results, 'create', TRUE);
 		return $results;
 	}
 
@@ -253,10 +270,7 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'User could not be deleted. Check ID.');
 		}
-		$query = $this->getQueryParams();
-		$json = isset($query['type']) && $query['type'] == 'json'; 
-		$this->view->render(['delete' => $results, 'json' => $json], 
-			'otherAction', $this->getErrors());
+    $this->callRender($results, 'delete', TRUE);
 		return $results;
 	}
 
@@ -277,7 +291,8 @@ class Controller {
 		if (!$results) {
 			$this->user->addError(Configuration::CONT_ERROR_MSG . 'Could not read user from database, Id not valid or missing.');
 		}
-
+    $this->callRender($results, 'read', FALSE);
+/*
 		$query = $this->getQueryParams();
 		if (isset($query['type']) && $query['type'] == 'json') {
 			$this->view->render($results, 'json', $this->getErrors());
@@ -286,6 +301,8 @@ class Controller {
       $results['errors'] = $this->getErrors();
       $this->view->renderTemplate('read.twig', $results);
 		}
+ * 
+ */
 		return $results;
 	}
 

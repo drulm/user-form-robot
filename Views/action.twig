@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}User App Action - {{ action }}{% endblock %}
+{% block body %}
+
+<h1>{{ action }} Action</h1>
+<ul class="list-group">
+  <li class="list-group-item">
+    <span class="label label-primary">Action:</span> {{ action }}
+  </li>
+  <li class="list-group-item">
+    <span class="label label-primary">Outcome:</span> {{ outcome }}
+  </li>
+</ul>
+
+{% endblock %}

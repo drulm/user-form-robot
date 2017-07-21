@@ -50,6 +50,91 @@ class View {
 
       return $twig->render($template, $args);
   }
+  
+	/**
+	 * Generate JSON based on data.
+	 *
+	 * @param array $data The data to render.
+	 * @return string The generated HTML.
+	 */
+	public function renderJson($data, $other_action = FALSE) {
+    if (!$other_action) {
+      echo json_encode($data, JSON_PRETTY_PRINT);
+    }
+    else {
+      $outcome = reset($data);
+		  $action = key($data);
+      $jsonOutput = ['result' => [$action => $outcome]];
+			echo json_encode($jsonOutput, JSON_PRETTY_PRINT);
+    }
+	}
+  
+  /**
+	 * Generate html for when a route error occurs.
+	 *
+	 * @param array $data Array of one user from a read.
+	 * @return string The HTML to display.
+	 */
+	public function renderRouteError($data) {
+		ob_start();
+		print_r($data['query']);
+		$query = ob_get_clean();
+
+$markup = <<<HTML
+<h1>Route Error:</h1>
+<h2>Command: {$data['command']}</h2>
+<h2>Query: {$query}</h2>
+HTML;
+
+		return $markup;
+	}
+  
+  /**
+	 * Generates HTML for errors if shown.
+	 *
+	 * @param array $errors Array of error strings.
+	 * @return string Returns HTML.
+	 */
+	public function renderErrors($errors) {
+		$markup = ''; foreach ($errors as $errString) {
+			$markup .= '<pre><h4>' . $errString . '</h4></pre>';
+		}
+		return $markup;
+	}
+  
+  	/**
+	 * Render simple page based on status of an action (command).
+	 *
+	 * @param array $data The data for this render
+	 *      $data[0] = action (string) => success (boolean)
+	 *      $data[1..n] = additional data
+	 * @return string HTML generated.
+	 */
+	/*public function renderOtherAction($data) {
+		$outcome = reset($data);
+		$action = key($data);
+		
+		if ($data['json']) {
+			$jsonOutput = ['result' => [$action => $outcome]];
+			$markup = json_encode($jsonOutput, JSON_PRETTY_PRINT);
+		}
+		else {
+      $results['errors'] = $this->getErrors();
+      $this->view->renderTemplate('read.twig', $results);
+
+      $markup = <<<HTML
+<h1>Action: {$action}</h1>
+<h2>Outcome: {$outcome}</h2>
+HTML;
+
+		}
+
+		//return $markup;
+	}
+   * 
+   */
+  
+
 
 	/**
 	 * Main render method, selects the render based on type.
@@ -87,6 +172,7 @@ class View {
 	   break;
 		}
 
+// @TODO Add error output to Twig
 		$errorMarkup = '';
 		if (isset($data['json']) && !$data['json']) {
 			$errorMarkup = Configuration::VIEW_ERRORS ? $this->renderErrors($errors) : '';
@@ -141,25 +227,7 @@ HTML;
    * 
    */
 
-	/**
-	 * Generate html for when a route error occurs.
-	 *
-	 * @param array $data Array of one user from a read.
-	 * @return string The HTML to display.
-	 */
-	public function renderRouteError($data) {
-		ob_start();
-		print_r($data['query']);
-		$query = ob_get_clean();
 
-$markup = <<<HTML
-<h1>Route Error:</h1>
-<h2>Command: {$data['command']}</h2>
-<h2>Query: {$query}</h2>
-HTML;
-
-		return $markup;
-	}
 
 	/**
 	 * Generate html for reading a single user.
@@ -187,6 +255,7 @@ HTML;
 	 * @param array $data Array of all users.
 	 * @return string HTML generated.
 	 */
+  /**
 	public function renderIndex($data) {
 		ob_start();
 		echo '<table><thead><tr><th>';
@@ -201,44 +270,8 @@ HTML;
 		$html = ob_get_clean();
 		return $html;
 	}
-
-	/**
-	 * Render simple page based on status of an action (command).
-	 *
-	 * @param array $data The data for this render
-	 *      $data[0] = action (string) => success (boolean)
-	 *      $data[1..n] = additional data
-	 * @return string HTML generated.
-	 */
-	public function renderOtherAction($data) {
-		$outcome = reset($data);
-		$action = key($data);
-		
-		if ($data['json']) {
-			$jsonOutput = ['result' => [$action => $outcome]];
-			$markup = json_encode($jsonOutput, JSON_PRETTY_PRINT);
-		}
-		else {
-		
-$markup = <<<HTML
-<h1>Action: {$action}</h1>
-<h2>Outcome: {$outcome}</h2>
-HTML;
-
-		}
-
-		return $markup;
-	}
-
-	/**
-	 * Generate JSON based on data.
-	 *
-	 * @param array $data The data to render.
-	 * @return string The generated HTML.
-	 */
-	public function renderJson($data) {
-		echo json_encode($data, JSON_PRETTY_PRINT);
-	}
+   * 
+   */
 
 	/**
 	 * Create basic page based on the data and echo it.
@@ -248,6 +281,7 @@ HTML;
 	 *
 	 * @return void
 	 */
+  /**
 	public function renderTemplateOld($html, $errors) {
 $markup = <<<HTML
 <!DOCTYPE html>
@@ -266,18 +300,9 @@ HTML;
 
 	echo $markup;
 	}
+   * 
+   */
 
-	/**
-	 * Generates HTML for errors if shown.
-	 *
-	 * @param array $errors Array of error strings.
-	 * @return string Returns HTML.
-	 */
-	public function renderErrors($errors) {
-		$markup = ''; foreach ($errors as $errString) {
-			$markup .= '<pre><h4>' . $errString . '</h4></pre>';
-		}
-		return $markup;
-	}
+
 
 }
