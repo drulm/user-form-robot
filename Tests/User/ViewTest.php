@@ -43,15 +43,12 @@ class ViewTest extends PHPUnit_Framework_TestCase
     /**
      * View test for renderJson
      *
-     * @todo Improve test to check for valid HTML or structure.
      * @return void
      */
     public function testRenderJson()
     {
-        $data = ['item1', 'item2', 'item2'];
-
         ob_start();
-        $this->object->renderJson($data);
+        $this->object->renderJson(['item1', 'item2', 'item2']);
         $result = ob_get_clean();
 
         $expected = <<<HTML
@@ -73,14 +70,21 @@ HTML;
      */
     public function testRenderTemplate()
     {
-        $html = 'default.twig';
-        $errors = ['err1', 'err2'];
-
         ob_start();
-        $this->object->renderTemplate($html, $errors);
+        $this->object->renderTemplate('default.twig', ['err1', 'err2']);
         $result = ob_get_clean();
-
         $this->assertTrue(is_string($result));
     }
 
+    /**
+     * View test for getTemplate()
+     * 
+     * @return void
+     */
+    public function testGetTemplate()
+    {
+        $template = $this->object->getTemplate('index.twig', ['err3', 'err4']);
+        $this->assertTrue(is_string($template));
+    }
+    
 }
