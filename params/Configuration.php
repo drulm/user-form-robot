@@ -72,5 +72,5 @@ class Configuration
      *
      * @var boolean
      */
-    const TEST_DATA_SIZE = 10;
+    const TEST_DATA_SIZE = 3;
 }

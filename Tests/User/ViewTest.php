@@ -48,7 +48,11 @@ class ViewTest extends PHPUnit_Framework_TestCase
     public function testRenderJson()
     {
         ob_start();
+
+        //*** TEST LINE ***
         $this->object->renderJson(['item1', 'item2', 'item2']);
+        //*** TEST LINE ***
+
         $result = ob_get_clean();
 
         $expected = <<<HTML
@@ -71,7 +75,11 @@ HTML;
     public function testRenderTemplate()
     {
         ob_start();
+
+        //*** TEST LINE ***
         $this->object->renderTemplate('default.twig', ['err1', 'err2']);
+        //*** TEST LINE ***
+
         $result = ob_get_clean();
         $this->assertTrue(is_string($result));
     }
@@ -83,7 +91,10 @@ HTML;
      */
     public function testGetTemplate()
     {
+        //*** TEST LINE ***
         $template = $this->object->getTemplate('index.twig', ['err3', 'err4']);
+        //*** TEST LINE ***
+        
         $this->assertTrue(is_string($template));
     }
     
