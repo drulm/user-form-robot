@@ -72,7 +72,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ['command' => 'index', 'query' => ['command' => 'index', 'type' => 'json']],
             ['command' => 'NoCommand', 'query' => ['command' => 'NoCommand']],
             ['command' => 'update', 'query' =>
-                ['command' => 'update', 'e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1', 'id' => '6']],
+                ['command' => 'update',
+                  'e' => 'e@test.dev',
+                  'fn' => 'first1',
+                  'ln' => 'last1',
+                  'p' => 'password1',
+                  'id' => '6']],
             ['command' => 'read', 'query' => ['id' => '6']],
             ['command' => 'read', 'query' => ['id' => '6', 'type' => 'json']],
             ['command' => 'update', 'query' =>
@@ -111,7 +116,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
             // Analyse the route.
             $url = $this->routes[$i];
+            
+            //*** TEST LINE ***
             $results = $this->object->analyseRoute($url);
+            //*** TEST LINE ***
 
             // Segment route into params and/or id.
             $params = $this->object->getParams();
@@ -119,6 +127,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $query = $this->object->getQueryParams();
 
             // Check that are the same.
+            $this->assertTrue(is_int(intval($id)) || $id == false);
             $this->assertEquals($params, $expected);
             $this->assertEquals($query, $expected['query']);
             $this->assertInternalType('boolean', $results);
@@ -142,15 +151,20 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
             // Collect output when routes are tested.
             ob_start();
-            $results = $this->object->directRoute($url);
+            
+            //*** TEST LINE ***
+            $this->object->directRoute($url);
+            //*** TEST LINE ***
+            
             $text = ob_get_clean();
 
             // Segment route into params and/or id.
             $params = $this->object->getParams();
             $id = $this->object->getID();
             $query = $this->object->getQueryParams();
-
+            
             // Check results
+            $this->assertTrue(is_int(intval($id)));
             $this->assertEquals($params, $expected);
             $this->assertEquals($query, $expected['query']);
             $this->assertInternalType('string', $text);
@@ -165,7 +179,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testRouteError()
     {
         ob_start();
+        
+        //*** TEST LINE ***
         $results = $this->object->routeError();
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
         $this->assertInternalType('string', $text);
         $this->assertInternalType('boolean', $results);
@@ -180,11 +198,32 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testDefaultPage()
     {
         ob_start();
+        
+        //*** TEST LINE ***
         $results = $this->object->defaultPage();
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
         $this->assertInternalType('string', $text);
         $this->assertInternalType('boolean', $results);
         $this->assertEquals(true, $results);
+    }
+    
+    /**
+     * Controller test callRender
+     *
+     * @return void
+     */
+    public function testCallRender()
+    {
+        ob_start();
+        
+        //*** TEST LINE ***
+        $results = $this->object->callRender("Twig", "index", false);
+        //*** TEST LINE ***
+        
+        $text = ob_get_clean();
+        $this->assertTrue(is_string($text));
     }
 
     /**
@@ -205,7 +244,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
         // Udpdate a user, and capture output.
         ob_start();
-        $createdId = $this->object->createUser($params);
+
+        //*** TEST LINE ***
+        $createdId = $this->object->updateUser($params);
+        //*** TEST LINE ***
+
         $text = ob_get_clean();
 
         // Check the results
@@ -234,7 +277,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
         // Create the user, and capture output.
         ob_start();
+        
+        //*** TEST LINE ***
         $createdId = $this->object->createUser($params);
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
 
         // Check the results
@@ -264,7 +311,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
         // Delete the user, and capture output.
         ob_start();
+        
+        //*** TEST LINE ***
         $results = $this->object->deleteUser(0);
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
 
         // Separaate the parameters
@@ -291,11 +342,15 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         // Set up a read route.
         $url = '/read/id/0';
-        $results = $this->object->analyseRoute($url);
+        $this->object->analyseRoute($url);
 
         // Read the user, and capture output.
         ob_start();
+        
+        //*** TEST LINE ***
         $results = $this->object->readUser();
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
 
         // Separaate the parameters
@@ -320,7 +375,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testIndexUser()
     {
         ob_start();
+        
+        //*** TEST LINE ***
         $results = $this->object->indexUser();
+        //*** TEST LINE ***
+        
         $text = ob_get_clean();
         $this->assertInternalType('array', $results);
         $this->assertInternalType('string', $text);
@@ -333,7 +392,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetID()
     {
+        //*** TEST LINE ***
         $result = $this->object->getID();
+        //*** TEST LINE ***
+        
         $expected = false;
         $this->assertEquals($expected, $result);
     }
@@ -345,7 +407,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetParams()
     {
+        //*** TEST LINE ***
         $result = $this->object->getParams();
+        //*** TEST LINE ***
+        
         $expected = null;
         $this->assertEquals($expected, $result);
     }
@@ -357,7 +422,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testGetQueryParams()
     {
+        //*** TEST LINE ***
         $result = $this->object->getQueryParams();
+        //*** TEST LINE ***
+        
         $expected = null;
         $this->assertEquals($expected, $result);
     }
@@ -370,7 +438,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     public function testGetUser()
     {
         // Make sure class returned is the Model class.
+        
+        //*** TEST LINE ***
         $result = $this->object->getUser();
+        //*** TEST LINE ***
+        
         $this->assertInstanceOf(Model::class, $result);
     }
 
@@ -384,7 +456,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         // Add errors and check if they are show up.
         $this->object->getUser()->addError('err1');
         $this->object->getUser()->addError('err2');
+        
+        //*** TEST LINE ***
         $result = $this->object->getErrors();
+        //*** TEST LINE ***
+        
         $expected = [0 => 'err1', 1 => 'err2'];
         $delta = 0.0;
         $maxDepth = 10;

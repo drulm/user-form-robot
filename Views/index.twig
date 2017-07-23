@@ -5,9 +5,17 @@
 <h1>Index of Users</h1>
 <div class="container">
     <table class="table">
-        <thead><tr><th>ID</th><th>Email</th><th>First</th><th>Last</th><th>Password</th></tr></thead>
+        <thead><tr><th>Command</th><th>ID</th><th>Email</th><th>First</th><th>Last</th><th>Password</th></tr></thead>
         {% for key, value in _context['results'] %}
           <tr>
+              <td>
+                  <span class="label">
+                      <a href="read/id/{{ value['id_users'] }}">Read</a>
+                  </span>
+                  <span class="label">
+                      <a href="delete/id/{{ value['id_users'] }}">Delete</a>
+                  </span>
+              </td>
           {% for column in value %}
             <td>{{ column }}</td>
           {% endfor %}
