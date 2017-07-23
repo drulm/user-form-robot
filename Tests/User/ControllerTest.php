@@ -72,7 +72,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ['command' => 'index', 'query' => ['command' => 'index', 'type' => 'json']],
             ['command' => 'NoCommand', 'query' => ['command' => 'NoCommand']],
             ['command' => 'update', 'query' =>
-                ['command' => 'update', 'e' => 'e@test.dev', 'fn' => 'first1', 'ln' => 'last1', 'p' => 'password1', 'id' => '6']],
+                ['command' => 'update',
+                  'e' => 'e@test.dev',
+                  'fn' => 'first1',
+                  'ln' => 'last1',
+                  'p' => 'password1',
+                  'id' => '6']],
             ['command' => 'read', 'query' => ['id' => '6']],
             ['command' => 'read', 'query' => ['id' => '6', 'type' => 'json']],
             ['command' => 'update', 'query' =>
@@ -122,6 +127,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $query = $this->object->getQueryParams();
 
             // Check that are the same.
+            $this->assertTrue(is_int(intval($id)) || $id == false);
             $this->assertEquals($params, $expected);
             $this->assertEquals($query, $expected['query']);
             $this->assertInternalType('boolean', $results);
@@ -147,7 +153,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ob_start();
             
             //*** TEST LINE ***
-            $results = $this->object->directRoute($url);
+            $this->object->directRoute($url);
             //*** TEST LINE ***
             
             $text = ob_get_clean();
@@ -156,8 +162,9 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $params = $this->object->getParams();
             $id = $this->object->getID();
             $query = $this->object->getQueryParams();
-
+            
             // Check results
+            $this->assertTrue(is_int(intval($id)));
             $this->assertEquals($params, $expected);
             $this->assertEquals($query, $expected['query']);
             $this->assertInternalType('string', $text);
@@ -212,7 +219,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         ob_start();
         
         //*** TEST LINE ***
-        $results = $this->object->callRender("Twig", "index", FALSE);
+        $results = $this->object->callRender("Twig", "index", false);
         //*** TEST LINE ***
         
         $text = ob_get_clean();
@@ -335,7 +342,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         // Set up a read route.
         $url = '/read/id/0';
-        $results = $this->object->analyseRoute($url);
+        $this->object->analyseRoute($url);
 
         // Read the user, and capture output.
         ob_start();

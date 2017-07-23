@@ -86,7 +86,7 @@ HTML;
 
     /**
      * View test for getTemplate()
-     * 
+     *
      * @return void
      */
     public function testGetTemplate()
@@ -97,5 +97,4 @@ HTML;
         
         $this->assertTrue(is_string($template));
     }
-    
 }
