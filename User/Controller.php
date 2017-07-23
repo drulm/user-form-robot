@@ -65,8 +65,8 @@ class Controller
         parse_str($query, $query);
 
         // Save the path, and remove everything up to the ? if needed.
-        $path = $parsed_url['path'];
-        $path = strtok($path, '?');
+        $pathWithQuery = $parsed_url['path'];
+        $path = strtok($pathWithQuery, '?');
 
         // Path elements holds each of the path-strings separated by '/'
         // Explode the path into each word in the path.
@@ -126,14 +126,12 @@ class Controller
      *
      * @param string $url Path and query parameters from URL.
      *
-     * @return bool True if command successful.
+     * @return mixed True if command successful.
      */
     public function directRoute($url)
     {
         $routeGood = $this->analyseRoute($url);
-
         $results = false;
-
         $params = $this->getParams();
 
         if ($routeGood || $params['command'] == '' && empty($params['query'])) {

@@ -143,7 +143,7 @@ class Model
                 $stmt->bindValue(':id_users', $params['id'], PDO::PARAM_INT);
 
                 try {
-                    $results = $stmt->execute();
+                    $stmt->execute();
                 } catch (\PDOexception $e) {
                     $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                     return false;
@@ -184,7 +184,7 @@ class Model
             }
 
             try {
-                $results = $stmt->execute();
+                $stmt->execute();
             } catch (\PDOexception $e) {
                 $this->addError(Configuration::DB_ERROR_MSG . $e->getMessage());
                 return false;
