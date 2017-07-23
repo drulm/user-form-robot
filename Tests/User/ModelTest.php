@@ -113,9 +113,6 @@ class ModelTest extends PHPUnit_Framework_TestCase
         for ($i = 0; $i < Configuration::TEST_DATA_SIZE; $i++) {
             // Read the data from the setup
             $result = $this->object->read($idList[$i]);
-            
-            \var_dump($result);
-            \var_dump($paramList[$i]);
 
             // For delete, and testing if empty.
             if ($testEmpty) {
